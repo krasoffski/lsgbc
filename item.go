@@ -36,20 +36,35 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	forEachNode(doc, printTR, nil)
+	forEachNode(doc, forEachTR, nil)
 }
 
-func printTR(n *html.Node) {
+func forEachTR(n *html.Node) {
+	items := make([]string, 0)
+	if n.Type == html.ElementNode && n.Data == "tr" { // row
+		for c := n.FirstChild; c != nil; c = c.NextSibling {
+			item := forEachTD(c)
+			if item == "" {
+				continue
+			}
+			items = append(items, item)
+		}
+		fmt.Println(strings.Join(items, ", "))
+	}
+}
+
+func forEachTD(n *html.Node) string {
+	items := make([]string, 0)
 	if n.Type == html.ElementNode && n.Data == "td" {
 		for c := n.FirstChild; c != nil; c = c.NextSibling {
-			if c.Type == html.TextNode {
-				fmt.Printf("%s ", strings.TrimSpace(c.Data))
+			if c.Type != html.TextNode {
+				continue
 			}
-			fmt.Println()
+			text := strings.TrimSpace(c.Data)
+			items = append(items, text)
 		}
-
 	}
-
+	return strings.Join(items, " ")
 }
 
 func forEachNode(n *html.Node, pre, post func(n *html.Node)) {
