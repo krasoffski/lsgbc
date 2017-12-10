@@ -44,27 +44,39 @@ func forEachTR(n *html.Node) {
 	if n.Type == html.ElementNode && n.Data == "tr" { // row
 		for c := n.FirstChild; c != nil; c = c.NextSibling {
 			item := forEachTD(c)
-			if item == "" {
+			if len(item) < 1 {
 				continue
 			}
-			items = append(items, item)
+			items = append(items, item...)
 		}
 		fmt.Println(strings.Join(items, ", "))
 	}
 }
 
-func forEachTD(n *html.Node) string {
+func forEachTD(n *html.Node) []string {
+	// if n.Type == html.ElementNode && n.Data != "td" {
+	// 	return nil
+	// }
 	items := make([]string, 0)
-	if n.Type == html.ElementNode && n.Data == "td" {
-		for c := n.FirstChild; c != nil; c = c.NextSibling {
-			if c.Type != html.TextNode {
+	for c := n.FirstChild; c != nil; c = c.NextSibling {
+		switch c.Type {
+		case html.TextNode:
+			items = append(items, strings.TrimSpace(c.Data))
+		case html.ElementNode:
+			if c.Data != "a" {
 				continue
 			}
-			text := strings.TrimSpace(c.Data)
-			items = append(items, text)
+			for _, a := range c.Attr {
+				if a.Key != "href" {
+					continue
+				}
+				// items = append(items, a.Val)
+			}
+			qq := c.FirstChild
+			items = append(items, qq.Data)
 		}
 	}
-	return strings.Join(items, " ")
+	return items
 }
 
 func forEachNode(n *html.Node, pre, post func(n *html.Node)) {
