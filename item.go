@@ -17,7 +17,7 @@ type item struct {
 	Link     string
 	Price    int
 	Sale     int
-	Discount int
+	Persesnt int
 	Lowest   int
 	Coupon   string
 }
@@ -36,19 +36,28 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
+
 	forEachNode(doc, forEachTR, nil)
 }
 
 func forEachTR(n *html.Node) {
-	items := make([]string, 0, 9)
 	if n.Type == html.ElementNode && n.Data == "tr" { // row
+		cells := make([]string, 0, 9)
 		for c := n.FirstChild; c != nil; c = c.NextSibling {
 			if c.Type == html.ElementNode && c.Data != "td" {
 				continue
 			}
-			items = forEachTD(c, items)
+			cells = forEachTD(c, cells)
 		}
-		fmt.Println(strings.Join(items, ", "))
+
+		if len(cells) == 0 { // skip table header, need improve
+			return
+		}
+
+		if len(cells) < 6 {
+			log.Fatalf("too few cells for %v", cells[0])
+		}
+		fmt.Println(strings.Join(cells, ", "))
 	}
 }
 
