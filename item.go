@@ -66,14 +66,18 @@ func forEachTD(n *html.Node) []string {
 			if c.Data != "a" {
 				continue
 			}
+			var url string
 			for _, a := range c.Attr {
 				if a.Key != "href" {
 					continue
 				}
-				// items = append(items, a.Val)
+				url = a.Val
 			}
-			qq := c.FirstChild
-			items = append(items, qq.Data)
+			childNode := c.FirstChild
+			if childNode.Data == "img" { // ugly hack for skipping img cell
+				continue
+			}
+			items = append(items, url, childNode.Data)
 		}
 	}
 	return items
