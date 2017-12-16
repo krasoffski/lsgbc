@@ -40,24 +40,20 @@ func main() {
 }
 
 func forEachTR(n *html.Node) {
-	items := make([]string, 0)
+	items := make([]string, 0, 9)
 	if n.Type == html.ElementNode && n.Data == "tr" { // row
 		for c := n.FirstChild; c != nil; c = c.NextSibling {
-			item := forEachTD(c)
-			if len(item) < 1 {
+			if c.Type == html.ElementNode && c.Data != "td" {
 				continue
 			}
-			items = append(items, item...)
+			items = forEachTD(c, items)
 		}
 		fmt.Println(strings.Join(items, ", "))
 	}
 }
 
-func forEachTD(n *html.Node) []string {
-	// if n.Type == html.ElementNode && n.Data != "td" {
-	// 	return nil
-	// }
-	items := make([]string, 0)
+// NOTE: think about passing pointer to slice instead of return.
+func forEachTD(n *html.Node, items []string) []string {
 	for c := n.FirstChild; c != nil; c = c.NextSibling {
 		switch c.Type {
 		case html.TextNode:
@@ -72,6 +68,7 @@ func forEachTD(n *html.Node) []string {
 					continue
 				}
 				url = a.Val
+				break // ignoring all other attrs
 			}
 			childNode := c.FirstChild
 			if childNode.Data == "img" { // ugly hack for skipping img cell
