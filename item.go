@@ -12,14 +12,14 @@ import (
 const LedFlashlightsList = "https://couponsfromchina.com/2017/06/19/ultimate-flashlight-coupons-deals-list-gearbest/"
 
 type item struct {
-	No       int
-	Name     string
-	Link     string
-	Price    int
-	Sale     int
-	Persesnt int
-	Lowest   int
-	Coupon   string
+	No      int
+	Name    string
+	Link    string
+	Price   int
+	Sale    int
+	Percent int
+	Lowest  int
+	Coupon  string
 }
 
 type items []item
