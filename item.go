@@ -1,8 +1,10 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
+	"math"
 	"net/http"
 	"net/url"
 	"os"
@@ -17,15 +19,15 @@ import (
 const LedFlashlightsList = "https://couponsfromchina.com/2017/06/19/ultimate-flashlight-coupons-deals-list-gearbest/"
 
 type item struct {
-	No      int
-	Name    string
-	Type    string
-	Link    string
-	Price   float64
-	Sale    float64
-	Percent float64
-	Lowest  float64
-	Coupon  string
+	No       int
+	Name     string
+	Category string
+	Link     string
+	Price    float64
+	Discount float64
+	Sale     float64
+	Lowest   float64
+	Coupon   string
 }
 
 // type items []*item
@@ -33,6 +35,17 @@ type item struct {
 var items []*item
 
 func main() {
+	minSale := flag.Float64("min", 0.0, "Minimus discount price")
+	maxSale := flag.Float64("max", 1000.0, "Maximum discount price")
+	onlyCategory := flag.String("only", "*", "Show only categories")
+	flag.Parse()
+
+	categories := make(map[string]bool)
+
+	for _, cat := range strings.Split(*onlyCategory, ",") {
+		categories[cat] = true
+	}
+
 	resp, err := http.Get(LedFlashlightsList)
 	if err != nil {
 		log.Fatalln(err)
@@ -47,30 +60,54 @@ func main() {
 
 	forEachNode(doc, forEachTR, nil)
 
-	sort.Slice(items, func(i, j int) bool { return items[i].Sale < items[j].Sale })
+	sort.Slice(items, func(i, j int) bool { return items[i].Discount < items[j].Discount })
 
+	fmt.Println()
 	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{"No", "Name", "Sale, $", "Type"})
+	table.SetHeader([]string{"No", "Name", "Discount, $", "Sale, %", "Lowest, $", "Category"})
 	table.SetAutoWrapText(false)
 	table.SetColumnAlignment([]int{
 		tablewriter.ALIGN_RIGHT,
 		tablewriter.ALIGN_LEFT,
 		tablewriter.ALIGN_RIGHT,
+		tablewriter.ALIGN_RIGHT,
+		tablewriter.ALIGN_RIGHT,
 		tablewriter.ALIGN_LEFT,
 	})
 
+	var count int
+
 	for _, v := range items {
-		if v.Type != "led-flashlights" {
+		if *onlyCategory != "*" && !categories[v.Category] {
 			continue
 		}
+		if v.Discount < *minSale || v.Discount > *maxSale {
+			continue
+		}
+
 		table.Append([]string{
 			fmt.Sprintf("%d", v.No),
 			v.Name,
-			fmt.Sprintf("%.1f", v.Sale),
-			v.Type,
+			fmt.Sprintf("%.1f", v.Discount),
+			nonZero(v.Sale),
+			nonZero(v.Lowest),
+			v.Category,
 		})
+		count++
 	}
+	table.SetBorder(false)
+	table.SetFooter([]string{"", "", "", "", "items", fmt.Sprintf("%d", count)})
 	table.Render()
+}
+
+func nonZero(val float64) string {
+	var printable string
+	if val > 0.0 {
+		printable = fmt.Sprintf("%.1f", val)
+	} else {
+		printable = "-"
+	}
+	return printable
 }
 
 func forEachTR(n *html.Node) {
@@ -90,7 +127,7 @@ func forEachTR(n *html.Node) {
 		if len(cells) < 6 {
 			log.Fatalf("too few cells for %v", cells[0])
 		}
-		// fmt.Println(strings.Join(cells, ", "))
+
 		items = append(items, makeItem(cells))
 	}
 }
@@ -103,17 +140,18 @@ func makeItem(c []string) *item {
 	itm.Link = c[1]
 	u, err := url.Parse(itm.Link)
 	checkError(err)
-	itm.Type = strings.Split(u.Path, "/")[1]
+	itm.Category = strings.Split(u.Path, "/")[1]
 
 	itm.Name = c[2]
 	itm.Price, err = strconv.ParseFloat(strings.Trim(c[3], "$"), 64)
 	checkError(err)
-	itm.Sale, err = strconv.ParseFloat(strings.Trim(c[4], "$"), 64)
+	itm.Discount, err = strconv.ParseFloat(strings.Trim(c[4], "$"), 64)
 	checkError(err)
 	if strings.HasSuffix(c[5], "%") {
 		dotted := strings.Replace(c[5], ",", ".", -1)
-		itm.Percent, err = strconv.ParseFloat(strings.TrimRight(dotted, "%"), 64)
+		val, err := strconv.ParseFloat(strings.TrimRight(dotted, "%"), 64)
 		checkError(err)
+		itm.Sale = math.Abs(val)
 		itm.Lowest, _ = strconv.ParseFloat(strings.TrimLeft(c[6], "$"), 64)
 	} else {
 		itm.Lowest, _ = strconv.ParseFloat(strings.TrimLeft(c[5], "$"), 64)
