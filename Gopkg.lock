@@ -2,6 +2,18 @@
 
 
 [[projects]]
+  name = "github.com/mattn/go-runewidth"
+  packages = ["."]
+  revision = "9e777a8366cce605130a531d2cd6363d07ad7317"
+  version = "v0.0.2"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/olekukonko/tablewriter"
+  packages = ["."]
+  revision = "65fec0d89a572b4367094e2058d3ebe667de3b60"
+
+[[projects]]
   branch = "master"
   name = "golang.org/x/net"
   packages = ["html","html/atom"]
@@ -10,6 +22,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "c93fd0049188faa82b8d2f31f976ed9e03d682d2e82859acabb566824484093e"
+  inputs-digest = "3e23788925402ea4d1a8e2a38fe5d913dd06007b1134ce595c7ebecdb1cd2aca"
   solver-name = "gps-cdcl"
   solver-version = 1

@@ -1,15 +1,16 @@
 package main
 
 import (
-	"html/template"
+	"fmt"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"sort"
 	"strconv"
 	"strings"
-	"text/tabwriter"
 
+	"github.com/olekukonko/tablewriter"
 	"golang.org/x/net/html"
 )
 
@@ -18,6 +19,7 @@ const LedFlashlightsList = "https://couponsfromchina.com/2017/06/19/ultimate-fla
 type item struct {
 	No      int
 	Name    string
+	Type    string
 	Link    string
 	Price   float64
 	Sale    float64
@@ -29,10 +31,6 @@ type item struct {
 // type items []*item
 
 var items []*item
-
-const tmpl = `{{range .}}
-{{.No}}	{{.Name}}	{{.Sale}}	{{end}}
-`
 
 func main() {
 	resp, err := http.Get(LedFlashlightsList)
@@ -50,14 +48,29 @@ func main() {
 	forEachNode(doc, forEachTR, nil)
 
 	sort.Slice(items, func(i, j int) bool { return items[i].Sale < items[j].Sale })
-	t := template.New("items")
-	t, err = t.Parse(tmpl)
-	checkError(err)
-	w := tabwriter.NewWriter(os.Stdout, 0, 0, 1, ' ', tabwriter.Debug)
-	if err := t.Execute(w, items); err != nil {
-		log.Fatal(err)
+
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetHeader([]string{"No", "Name", "Sale, $", "Type"})
+	table.SetAutoWrapText(false)
+	table.SetColumnAlignment([]int{
+		tablewriter.ALIGN_RIGHT,
+		tablewriter.ALIGN_LEFT,
+		tablewriter.ALIGN_RIGHT,
+		tablewriter.ALIGN_LEFT,
+	})
+
+	for _, v := range items {
+		if v.Type != "led-flashlights" {
+			continue
+		}
+		table.Append([]string{
+			fmt.Sprintf("%d", v.No),
+			v.Name,
+			fmt.Sprintf("%.1f", v.Sale),
+			v.Type,
+		})
 	}
-	w.Flush()
+	table.Render()
 }
 
 func forEachTR(n *html.Node) {
@@ -88,6 +101,10 @@ func makeItem(c []string) *item {
 	itm.No, err = strconv.Atoi(c[0])
 	checkError(err)
 	itm.Link = c[1]
+	u, err := url.Parse(itm.Link)
+	checkError(err)
+	itm.Type = strings.Split(u.Path, "/")[1]
+
 	itm.Name = c[2]
 	itm.Price, err = strconv.ParseFloat(strings.Trim(c[3], "$"), 64)
 	checkError(err)
