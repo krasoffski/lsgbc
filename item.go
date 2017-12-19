@@ -24,9 +24,9 @@ type item struct {
 	Name     string
 	Category string
 	Link     string
+	Usual    float64
 	Price    float64
 	Discount float64
-	Sale     float64
 	Lowest   float64
 	Coupon   string
 }
@@ -62,11 +62,11 @@ func main() {
 
 	forEachNode(doc, forEachTR, nil)
 
-	sort.Slice(items, func(i, j int) bool { return items[i].Discount < items[j].Discount })
+	sort.Slice(items, func(i, j int) bool { return items[i].Price < items[j].Price })
 
 	fmt.Println()
 	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{"No", "Name", "Discount, $", "Sale, %", "Lowest, $", "Category"})
+	table.SetHeader([]string{"No", "Name", "Price, $", "Discount, %", "Lowest, $", "Category"})
 	table.SetAutoWrapText(false)
 	table.SetBorder(false)
 	table.SetColumnAlignment([]int{
@@ -86,7 +86,7 @@ func main() {
 			continue
 		}
 
-		if v.Discount < *minSale || v.Discount > *maxSale {
+		if v.Price < *minSale || v.Price > *maxSale {
 			continue
 		}
 
@@ -97,8 +97,8 @@ func main() {
 		table.Append([]string{
 			fmt.Sprintf("%d", v.No),
 			v.Name,
-			fmt.Sprintf("%.1f", v.Discount),
-			nonZero(v.Sale),
+			fmt.Sprintf("%.1f", v.Price),
+			nonZero(v.Discount),
 			nonZero(v.Lowest),
 			v.Category,
 		})
@@ -160,15 +160,15 @@ func makeItem(c []string) *item {
 	itm.Category = strings.Split(u.Path, "/")[1]
 
 	itm.Name = c[2]
-	itm.Price, err = strconv.ParseFloat(strings.Trim(c[3], "$"), 64)
+	itm.Usual, err = strconv.ParseFloat(strings.Trim(c[3], "$"), 64)
 	checkError(err)
-	itm.Discount, err = strconv.ParseFloat(strings.Trim(c[4], "$"), 64)
+	itm.Price, err = strconv.ParseFloat(strings.Trim(c[4], "$"), 64)
 	checkError(err)
 	if strings.HasSuffix(c[5], "%") {
 		dotted := strings.Replace(c[5], ",", ".", -1)
 		val, err := strconv.ParseFloat(strings.TrimRight(dotted, "%"), 64)
 		checkError(err)
-		itm.Sale = math.Abs(val)
+		itm.Discount = math.Abs(val)
 		itm.Lowest, _ = strconv.ParseFloat(strings.TrimLeft(c[6], "$"), 64)
 	} else {
 		itm.Lowest, _ = strconv.ParseFloat(strings.TrimLeft(c[5], "$"), 64)
