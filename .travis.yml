@@ -3,6 +3,6 @@ go:
   - tip
 
 script:
-  - go build -x
+  - make all
 
 sudo: false
