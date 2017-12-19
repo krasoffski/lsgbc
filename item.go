@@ -12,8 +12,8 @@ import (
 	"strconv"
 	"strings"
 
-	glob "github.com/obeattie/ohmyglob"
 	"github.com/olekukonko/tablewriter"
+	glob "github.com/ryanuber/go-glob"
 	"golang.org/x/net/html"
 )
 
@@ -42,13 +42,10 @@ func main() {
 	nameGlob := flag.String("name", "*", "Case sensitive name matching with glob pattern")
 	flag.Parse()
 
-	g, err := glob.Compile(*nameGlob, glob.DefaultOptions)
-	checkError(err)
-
-	categories := make(map[string]bool)
+	categories := make(map[string]struct{})
 
 	for _, cat := range strings.Split(*onlyCategories, ",") {
-		categories[cat] = true
+		categories[cat] = struct{}{}
 	}
 
 	resp, err := http.Get(ledFlashlightsList)
@@ -85,14 +82,15 @@ func main() {
 
 	for _, v := range items {
 		// NOTE: add filters here.
-		if *onlyCategories != "*" && !categories[v.Category] {
+		if !globCategories(v.Category, categories) {
 			continue
 		}
+
 		if v.Discount < *minSale || v.Discount > *maxSale {
 			continue
 		}
 
-		if !g.MatchString(v.Name) {
+		if !glob.Glob(*nameGlob, v.Name) {
 			continue
 		}
 
@@ -108,6 +106,15 @@ func main() {
 	}
 	table.SetFooter([]string{"", "", "", "", "items", fmt.Sprintf("%d", count)})
 	table.Render()
+}
+
+func globCategories(s string, categories map[string]struct{}) bool {
+	for c := range categories {
+		if glob.Glob(c, s) {
+			return true
+		}
+	}
+	return false
 }
 
 func nonZero(val float64) string {

@@ -2,22 +2,10 @@
 
 
 [[projects]]
-  name = "github.com/cihub/seelog"
-  packages = ["."]
-  revision = "d2c6e5aa9fbfdd1c624e140287063c7730654115"
-  version = "v2.6"
-
-[[projects]]
   name = "github.com/mattn/go-runewidth"
   packages = ["."]
   revision = "9e777a8366cce605130a531d2cd6363d07ad7317"
   version = "v0.0.2"
-
-[[projects]]
-  branch = "master"
-  name = "github.com/obeattie/ohmyglob"
-  packages = ["."]
-  revision = "290764208a0d066492b1864e86faf90992407852"
 
 [[projects]]
   branch = "master"
@@ -26,14 +14,23 @@
   revision = "65fec0d89a572b4367094e2058d3ebe667de3b60"
 
 [[projects]]
+  name = "github.com/ryanuber/go-glob"
+  packages = ["."]
+  revision = "572520ed46dbddaed19ea3d9541bdd0494163693"
+  version = "v0.1"
+
+[[projects]]
   branch = "master"
   name = "golang.org/x/net"
-  packages = ["html","html/atom"]
+  packages = [
+    "html",
+    "html/atom"
+  ]
   revision = "d866cfc389cec985d6fda2859936a575a55a3ab6"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "dd30b4d10f4e6717ac57b2a28b013ac2bad70a52f2d5a7af7269a4d02a34895f"
+  inputs-digest = "d102a25624b7b2d01373f70d372211e8bccaf854719fca5c3583426aa63ea19a"
   solver-name = "gps-cdcl"
   solver-version = 1

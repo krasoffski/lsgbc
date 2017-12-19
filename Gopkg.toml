@@ -7,5 +7,5 @@
   name = "github.com/olekukonko/tablewriter"
 
 [[constraint]]
-  branch = "master"
-  name = "github.com/obeattie/ohmyglob"
+  name = "github.com/ryanuber/go-glob"
+  version = "0.1.0"
