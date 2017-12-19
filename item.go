@@ -12,11 +12,12 @@ import (
 	"strconv"
 	"strings"
 
+	glob "github.com/obeattie/ohmyglob"
 	"github.com/olekukonko/tablewriter"
 	"golang.org/x/net/html"
 )
 
-const LedFlashlightsList = "https://couponsfromchina.com/2017/06/19/ultimate-flashlight-coupons-deals-list-gearbest/"
+const ledFlashlightsList = "https://couponsfromchina.com/2017/06/19/ultimate-flashlight-coupons-deals-list-gearbest/"
 
 type item struct {
 	No       int
@@ -37,16 +38,20 @@ var items []*item
 func main() {
 	minSale := flag.Float64("min", 0.0, "Minimus discount price")
 	maxSale := flag.Float64("max", 1000.0, "Maximum discount price")
-	onlyCategory := flag.String("only", "*", "Show only categories")
+	onlyCategories := flag.String("categories", "*", "Comma separated list of categories")
+	nameGlob := flag.String("name", "*", "Case sensitive name matching with glob pattern")
 	flag.Parse()
+
+	g, err := glob.Compile(*nameGlob, glob.DefaultOptions)
+	checkError(err)
 
 	categories := make(map[string]bool)
 
-	for _, cat := range strings.Split(*onlyCategory, ",") {
+	for _, cat := range strings.Split(*onlyCategories, ",") {
 		categories[cat] = true
 	}
 
-	resp, err := http.Get(LedFlashlightsList)
+	resp, err := http.Get(ledFlashlightsList)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -66,6 +71,7 @@ func main() {
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetHeader([]string{"No", "Name", "Discount, $", "Sale, %", "Lowest, $", "Category"})
 	table.SetAutoWrapText(false)
+	table.SetBorder(false)
 	table.SetColumnAlignment([]int{
 		tablewriter.ALIGN_RIGHT,
 		tablewriter.ALIGN_LEFT,
@@ -78,10 +84,15 @@ func main() {
 	var count int
 
 	for _, v := range items {
-		if *onlyCategory != "*" && !categories[v.Category] {
+		// NOTE: add filters here.
+		if *onlyCategories != "*" && !categories[v.Category] {
 			continue
 		}
 		if v.Discount < *minSale || v.Discount > *maxSale {
+			continue
+		}
+
+		if !g.MatchString(v.Name) {
 			continue
 		}
 
@@ -95,7 +106,6 @@ func main() {
 		})
 		count++
 	}
-	table.SetBorder(false)
 	table.SetFooter([]string{"", "", "", "", "items", fmt.Sprintf("%d", count)})
 	table.Render()
 }
