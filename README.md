@@ -9,8 +9,8 @@ different types of items for best deal look up.
 ## Usage
 
 For example, you would like to know current price with coupon for `Jetbeam` and
-`Convoy` flashlights with price less than `20 ye`. You can use `*` for matching
-to avoid full name/category typing.
+`Eagle Eye` flashlights with price less than `20 ye`. You can use `*` for
+matching to avoid full name/category typing.
 
 This can be achieved with following command:
 

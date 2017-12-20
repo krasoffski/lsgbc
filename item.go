@@ -40,8 +40,9 @@ func main() {
 	maxPrice := pflag.Float64P("max-price", "M", 1000.0, "maximum discount price")
 	categoriesGlob := pflag.StringP("categories", "c", "*", "comma separated list of categories")
 	namesGlob := pflag.StringP("names", "n", "*", "case sensitive names matching with glob pattern")
-	shortHeader := pflag.BoolP("short", "s", false, "use short table header for compactness")
+	compactTable := pflag.BoolP("compact", "C", false, "use compact table representation")
 	_ = pflag.StringP("sort-by", "S", "price", "not yet implemented")
+	_ = pflag.StringP("list", "l", "flashlight", "not yet implemented")
 	_ = pflag.BoolP("deskending", "d", false, "not yet implemented")
 	pflag.Parse()
 
@@ -66,20 +67,22 @@ func main() {
 
 	fmt.Println()
 	table := tablewriter.NewWriter(os.Stdout)
-	if *shortHeader {
-		table.SetHeader([]string{"#", "N", "P, $", "D, %", "L, $", "C"})
-	} else {
-		table.SetHeader([]string{"No", "Name", "Price, $", "Discount, %", "Lowest, $", "Category"})
-	}
 	table.SetAutoWrapText(false)
 	table.SetBorder(false)
+
+	if *compactTable {
+		table.SetHeader([]string{"#", "N", "P, $", "D, %", "L, $"})
+	} else {
+		table.SetHeader([]string{"Nu", "Name", "Price, $", "Discount, %", "Lowest, $", "Category"})
+	}
+
 	table.SetColumnAlignment([]int{
 		tablewriter.ALIGN_RIGHT,
 		tablewriter.ALIGN_LEFT,
 		tablewriter.ALIGN_RIGHT,
 		tablewriter.ALIGN_RIGHT,
 		tablewriter.ALIGN_RIGHT,
-		tablewriter.ALIGN_LEFT,
+		// tablewriter.ALIGN_LEFT,
 	})
 
 	var count int
@@ -97,18 +100,28 @@ func main() {
 		if v.Price < *minPrice || v.Price > *maxPrice {
 			continue
 		}
+		row := make([]string, 0, 6) // Do not allocate new memory during append.
 
-		table.Append([]string{
+		row = append(row,
 			fmt.Sprintf("%d", v.No),
 			v.Name,
 			fmt.Sprintf("%.1f", v.Price),
 			nonZero(v.Discount),
 			nonZero(v.Lowest),
-			v.Category,
-		})
+		)
+		if !*compactTable {
+			row = append(row, v.Category)
+		}
+		table.Append(row)
 		count++
 	}
-	table.SetFooter([]string{"", "", "", "", "items", fmt.Sprintf("%d", count)})
+
+	if *compactTable {
+		table.SetFooter([]string{"", "", "", "", fmt.Sprintf("%d", count)})
+	} else {
+		table.SetFooter([]string{"", "", "", "", "Items", fmt.Sprintf("%d", count)})
+	}
+
 	table.Render()
 }
 
