@@ -1,3 +1,5 @@
+# .DEFAULT_GOAL := linux
+
 BINARY = lsgbc
 GOARCH = amd64
 LDFLAGS = -ldflags "-s -w"

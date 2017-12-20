@@ -40,6 +40,7 @@ func main() {
 	maxSale := flag.Float64("max", 1000.0, "Maximum discount price")
 	onlyCategories := flag.String("categories", "*", "Comma separated list of categories")
 	nameGlob := flag.String("name", "*", "Case sensitive name matching with glob pattern")
+	shortHeader := flag.Bool("short", false, "Use short table header for compactness")
 	flag.Parse()
 
 	categories := make(map[string]struct{})
@@ -66,7 +67,11 @@ func main() {
 
 	fmt.Println()
 	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{"No", "Name", "Price, $", "Discount, %", "Lowest, $", "Category"})
+	if *shortHeader {
+		table.SetHeader([]string{"#", "N", "P, $", "D, %", "L, $", "C"})
+	} else {
+		table.SetHeader([]string{"No", "Name", "Price, $", "Discount, %", "Lowest, $", "Category"})
+	}
 	table.SetAutoWrapText(false)
 	table.SetBorder(false)
 	table.SetColumnAlignment([]int{
