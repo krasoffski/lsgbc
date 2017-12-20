@@ -42,3 +42,26 @@ You can notice here such fields:
  - `DISCOUNT` - discount in percents comparing with regular price without coupon
  - `LOWEST` - lowest price for this product during monitoring
  - `CATEGORY` - product category from URL path
+
+### Compact representation
+
+When you get familiar with column names, you might want to use compact mode
+`-C/--compact` on small terminal windows.
+
+```bash
+$ ./lsgbc-linux-amd64 -M 20 -n 'Jet*,Eagle*' --compact
+
+   #  |                  N                  | P, $ | D, % | L, $
++-----+-------------------------------------+------+------+------+
+  164 | Jetbeam JET-u Flashlight            | 11.0 |    - |  7.0
+  111 | Eagle Eye X6 HOST Flashlight        | 13.0 | 13.4 | 11.0
+  105 | Eagle Eye X2R 6000-6500K Flashlight | 14.0 | 22.5 |    -
+  163 | Jetbeam JET-I MK Flashlight         | 14.0 |    - | 10.0
+  103 | Eagle Eye X2R 1A Flashlight         | 15.9 | 12.0 | 15.0
+  104 | Eagle Eye X2R 3C Flashlight         | 16.3 | 12.0 | 13.7
+  106 | Eagle Eye X2R NW Flashlight         | 16.3 | 12.0 | 12.5
+  107 | Eagle Eye X5R 3A Flashlight         | 20.0 | 34.8 | 20.0
++-----+-------------------------------------+------+------+------+
+                                                             8
+                                                          +------+
+```
