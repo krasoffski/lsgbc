@@ -15,7 +15,7 @@ matching to avoid full name/category typing.
 This can be achieved with following command:
 
 ```bash
-$ ./lsgbc-linux-amd64 -M 20 -n 'Jet*,Convoy*'
+$ ./lsgbc-linux-amd64 -M 20 -n 'Jet*,Eagle*'
 
   NO  |                NAME                 | PRICE, $ | DISCOUNT, % | LOWEST, $ |    CATEGORY
 +-----+-------------------------------------+----------+-------------+-----------+-----------------+
