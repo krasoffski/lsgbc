@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"log"
 	"math"
@@ -12,6 +11,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/ogier/pflag"
 	"github.com/olekukonko/tablewriter"
 	glob "github.com/ryanuber/go-glob"
 	"golang.org/x/net/html"
@@ -36,18 +36,17 @@ type item struct {
 var items []*item
 
 func main() {
-	minSale := flag.Float64("min", 0.0, "Minimus discount price")
-	maxSale := flag.Float64("max", 1000.0, "Maximum discount price")
-	onlyCategories := flag.String("categories", "*", "Comma separated list of categories")
-	nameGlob := flag.String("name", "*", "Case sensitive name matching with glob pattern")
-	shortHeader := flag.Bool("short", false, "Use short table header for compactness")
-	flag.Parse()
+	minPrice := pflag.Float64P("min-price", "m", 0.0, "minimal discount price")
+	maxPrice := pflag.Float64P("max-price", "M", 1000.0, "maximum discount price")
+	categoriesGlob := pflag.StringP("categories", "c", "*", "comma separated list of categories")
+	namesGlob := pflag.StringP("names", "n", "*", "case sensitive names matching with glob pattern")
+	shortHeader := pflag.BoolP("short", "s", false, "use short table header for compactness")
+	_ = pflag.StringP("sort-by", "S", "price", "not yet implemented")
+	_ = pflag.BoolP("deskending", "d", false, "not yet implemented")
+	pflag.Parse()
 
-	categories := make(map[string]struct{})
-
-	for _, cat := range strings.Split(*onlyCategories, ",") {
-		categories[cat] = struct{}{}
-	}
+	categories := uniqOpts(*categoriesGlob)
+	names := uniqOpts(*namesGlob)
 
 	resp, err := http.Get(ledFlashlightsList)
 	if err != nil {
@@ -87,15 +86,15 @@ func main() {
 
 	for _, v := range items {
 		// NOTE: add filters here.
-		if !globCategories(v.Category, categories) {
+		if !globWords(v.Category, categories) {
 			continue
 		}
 
-		if v.Price < *minSale || v.Price > *maxSale {
+		if !globWords(v.Name, names) {
 			continue
 		}
 
-		if !glob.Glob(*nameGlob, v.Name) {
+		if v.Price < *minPrice || v.Price > *maxPrice {
 			continue
 		}
 
@@ -113,13 +112,21 @@ func main() {
 	table.Render()
 }
 
-func globCategories(s string, categories map[string]struct{}) bool {
-	for c := range categories {
+func globWords(s string, words map[string]struct{}) bool {
+	for c := range words {
 		if glob.Glob(c, s) {
 			return true
 		}
 	}
 	return false
+}
+
+func uniqOpts(s string) map[string]struct{} {
+	unique := make(map[string]struct{})
+	for _, w := range strings.Split(s, ",") {
+		unique[w] = struct{}{}
+	}
+	return unique
 }
 
 func nonZero(val float64) string {

@@ -8,6 +8,12 @@
   version = "v0.0.2"
 
 [[projects]]
+  name = "github.com/ogier/pflag"
+  packages = ["."]
+  revision = "32a05c62658bd1d7c7e75cbc8195de5d585fde0f"
+  version = "v0.0.1"
+
+[[projects]]
   branch = "master"
   name = "github.com/olekukonko/tablewriter"
   packages = ["."]
@@ -31,6 +37,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "d102a25624b7b2d01373f70d372211e8bccaf854719fca5c3583426aa63ea19a"
+  inputs-digest = "5489e4830ba5f41ca73377719dc5315d504b01659b997dc462806947ac8d3506"
   solver-name = "gps-cdcl"
   solver-version = 1

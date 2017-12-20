@@ -9,3 +9,7 @@
 [[constraint]]
   name = "github.com/ryanuber/go-glob"
   version = "0.1.0"
+
+[[constraint]]
+  name = "github.com/ogier/pflag"
+  version = "0.0.1"
