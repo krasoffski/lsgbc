@@ -2,7 +2,7 @@
 [![Build Status](https://travis-ci.org/krasoffski/lsgbc.svg?branch=master)](https://travis-ci.org/krasoffski/lsgbc)
 
 ## Objectivity
-In short words `lsgbs` is a command line interface for
+In short words, `lsgbs` is a command line interface for
 https://couponsfromchina.com/ which allows you to sort, include or exclude
 different types of items for best deal look up.
 
@@ -14,7 +14,7 @@ matching to avoid full name/category typing.
 
 This can be achieved with following command:
 
-```bash
+```
 $ ./lsgbc-linux-amd64 -M 20 -n 'Jet*,Eagle*'
 
   NO  |                NAME                 | PRICE, $ | DISCOUNT, % | LOWEST, $ |    CATEGORY
@@ -34,7 +34,7 @@ $ ./lsgbc-linux-amd64 -M 20 -n 'Jet*,Eagle*'
 
 _Note: `-n/--names` and `-c/--categories` options are case sensitive._
 
-You can notice here such fields:
+There are following fields:
 
  - `NO` - number of product in the corresponding table.
  - `NAME` - product name from table.
@@ -48,7 +48,7 @@ You can notice here such fields:
 When you get familiar with column names, you might want to use compact mode
 `-C/--compact` on small terminal windows.
 
-```bash
+```
 $ ./lsgbc-linux-amd64 -M 20 -n 'Jet*,Eagle*' --compact
 
    #  |                  N                  | P, $ | D, % | L, $
