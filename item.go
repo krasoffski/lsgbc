@@ -61,14 +61,7 @@ func main() {
 	categories := uniqOpts(*categoriesGlob)
 	names := uniqOpts(*namesGlob)
 
-	resp, err := http.Get(ledFlashlightsList)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	defer resp.Body.Close()
-
-	doc, err := html.Parse(resp.Body)
-	resp.Body.Close()
+	doc, err := parseList(ledFlashlightsList)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -142,6 +135,20 @@ func main() {
 	}
 
 	table.Render()
+}
+
+func parseList(url string) (*html.Node, error) {
+	resp, err := http.Get(ledFlashlightsList)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	doc, err := html.Parse(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	return doc, nil
 }
 
 func globWords(s string, words map[string]struct{}) bool {
