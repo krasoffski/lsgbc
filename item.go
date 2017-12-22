@@ -41,6 +41,7 @@ func main() {
 	categoriesGlob := pflag.StringP("categories", "c", "*", "comma separated list of categories")
 	namesGlob := pflag.StringP("names", "n", "*", "case sensitive names matching with glob pattern")
 	compactTable := pflag.BoolP("compact", "C", false, "use compact table representation")
+	onlyBest := pflag.Bool("best", false, "show only best deals")
 	_ = pflag.StringP("sort-by", "S", "price", "not yet implemented")
 	_ = pflag.StringP("list", "l", "flashlight", "not yet implemented")
 	_ = pflag.BoolP("deskending", "d", false, "not yet implemented")
@@ -100,6 +101,13 @@ func main() {
 		if v.Price < *minPrice || v.Price > *maxPrice {
 			continue
 		}
+
+		if *onlyBest {
+			if v.Price > v.Lowest*1.1 {
+				continue
+			}
+		}
+
 		row := make([]string, 0, 6) // Do not allocate new memory during append.
 
 		row = append(row,
