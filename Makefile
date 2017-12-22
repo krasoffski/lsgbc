@@ -38,6 +38,11 @@ dist/windows:
 dist/windows/short:
 	GOOS=windows GOARCH=${GOARCH} go build ${LDFLAGS} -o dist/${BINARY}
 
+tar.gz: dist
+	tar -zcvf dist/${BINARY}-${VERSION}-linux-${GOARCH}.tar.gz -C dist ${BINARY}-linux-${GOARCH}
+	tar -zcvf dist/${BINARY}-${VERSION}-darvin-${GOARCH}.tar.gz -C dist ${BINARY}-darwin-${GOARCH}
+	tar -zcvf dist/${BINARY}-${VERSION}-windows-${GOARCH}.tar.gz -C dist ${BINARY}-windows-${GOARCH}.exe
+
 
 clean/dist:
 	-rm -rf dist
