@@ -38,8 +38,10 @@ var items []*item
 func main() {
 	minPrice := pflag.Float64P("min-price", "m", 0.0, "minimal discount price")
 	maxPrice := pflag.Float64P("max-price", "M", 1000.0, "maximum discount price")
-	categoriesGlob := pflag.StringP("categories", "c", "*", "comma separated list of categories")
-	namesGlob := pflag.StringP("names", "n", "*", "case sensitive names matching with glob pattern")
+	categoriesGlob := pflag.StringP("categories", "c", "*",
+		"comma separated list of categories matching with glob pattern (case sensitive)")
+	namesGlob := pflag.StringP("names", "n", "*",
+		"comma separated list of names matching with glob pattern (case sensitive)")
 	compactTable := pflag.BoolP("compact", "C", false, "use compact table representation")
 	onlyBest := pflag.Bool("best", false, "show only best deals")
 	_ = pflag.StringP("sort-by", "S", "price", "not yet implemented")
