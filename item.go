@@ -17,6 +17,9 @@ import (
 	"golang.org/x/net/html"
 )
 
+// Version is version of package.
+var Version = "0.0.0"
+
 const ledFlashlightsList = "https://couponsfromchina.com/2017/06/19/ultimate-flashlight-coupons-deals-list-gearbest/"
 
 type item struct {
@@ -43,11 +46,17 @@ func main() {
 	namesGlob := pflag.StringP("names", "n", "*",
 		"comma separated list of names matching with glob pattern (case sensitive)")
 	compactTable := pflag.BoolP("compact", "C", false, "use compact table representation")
+	version := pflag.BoolP("version", "V", false, "show version and exit")
 	onlyBest := pflag.Bool("best", false, "show only best deals")
 	_ = pflag.StringP("sort-by", "S", "price", "not yet implemented")
 	_ = pflag.StringP("list", "l", "flashlight", "not yet implemented")
 	_ = pflag.BoolP("deskending", "d", false, "not yet implemented")
 	pflag.Parse()
+
+	if *version {
+		fmt.Printf("Version is: %s\n", Version)
+		os.Exit(0)
+	}
 
 	categories := uniqOpts(*categoriesGlob)
 	names := uniqOpts(*namesGlob)
