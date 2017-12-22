@@ -12,3 +12,6 @@
 
 # Ignoring vendor directory due to dep for now
 vendor
+
+# Ignoring dist directory with binaries
+dist
