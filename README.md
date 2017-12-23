@@ -84,11 +84,10 @@ shows only items with current `PRICE` equal or less than `LOWEST*1.1`.
 
 For example:
 ```
-$ ./dist/lsgbc-linux-amd64 --max-price=15 --categories="led*" --best
+$ .lsgbc-linux-amd64 --max-price=15 --categories="led*" --best
 
   NU  |                  NAME                   | PRICE, $ | DISCOUNT, % | LOWEST, $ |    CATEGORY
 +-----+-----------------------------------------+----------+-------------+-----------+-----------------+
-  351 | Ultrafire H19-1 Flashlight              |      5.4 |           - |       5.4 | led-flashlights
   384 | Zanflare F6S Flashlight                 |      6.0 |        70.0 |       6.0 | led-flashlights
   212 | Lumintop IYP365 CW Flashlight           |     10.0 |        20.7 |      10.0 | led-flashlights
   374 | YWXLight 5000 lm Headlamp               |     10.0 |        23.1 |      10.0 | led-flashlights
@@ -96,16 +95,8 @@ $ ./dist/lsgbc-linux-amd64 --max-price=15 --categories="led*" --best
   213 | Lumintop IYP365 NW Flashlight           |     12.0 |           - |      12.0 | led-flashlights
    79 | Convoy S2+ 365nm Nichia UV Flashlight   |     13.0 |        35.0 |      12.0 | led-flashlights
    74 | Convoy S2 V2-1A Flashlight              |     13.0 |           - |      12.6 | led-flashlights
-  123 | HaikeLite HT08 Flashlight               |     13.0 |        23.5 |      13.0 | led-flashlights
-  259 | Nitecore TIP CRI Flashlight Blue        |     14.0 |        60.0 |      14.0 | led-flashlights
-  263 | Nitecore TIP CRI Flashlight Silver      |     14.0 |        60.0 |      14.0 | led-flashlights
-  271 | Nitecore TIP XP-G2 S3 Silver Flashlight |     15.0 |        50.0 |      15.0 | led-flashlights
-  269 | Nitecore TIP XP-G2 S3 Flashlight Green  |     15.0 |        10.7 |      15.0 | led-flashlights
-  268 | Nitecore TIP XP-G2 S3 Flashlight Golden |     15.0 |        10.7 |      15.0 | led-flashlights
-  267 | Nitecore TIP XP-G2 S3 Flashlight Blue   |     15.0 |        10.7 |      15.0 | led-flashlights
-  270 | Nitecore TIP XP-G2 S3 Flashlight Red    |     15.0 |        10.7 |      15.0 | led-flashlights
 +-----+-----------------------------------------+----------+-------------+-----------+-----------------+
-                                                                             ITEMS   |       16
+                                                                             ITEMS   |        7
                                                                          +-----------+-----------------+
 ```
 This table contains only deals for `CATEGORY` equels to `led-flashlights` with
