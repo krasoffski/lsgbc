@@ -20,8 +20,6 @@ import (
 // Version is version of package.
 var Version = "0.0.0"
 
-const ledFlashlightsList = "https://couponsfromchina.com/2017/06/19/ultimate-flashlight-coupons-deals-list-gearbest/"
-
 type item struct {
 	No       int
 	Name     string
@@ -39,6 +37,15 @@ type item struct {
 var items []*item
 
 func main() {
+
+	// This code smells.
+	allowedList := make([]string, 0, len(Links))
+	for k := range Links {
+		allowedList = append(allowedList, k)
+	}
+	sort.Slice(allowedList, func(i, j int) bool { return allowedList[i] < allowedList[j] })
+	allowed := strings.Join(allowedList, ",")
+
 	minPrice := pflag.Float64P("min-price", "m", 0.0, "minimal discount price")
 	maxPrice := pflag.Float64P("max-price", "M", 1000.0, "maximum discount price")
 	categoriesGlob := pflag.StringP("categories", "c", "*",
@@ -48,8 +55,9 @@ func main() {
 	compactTable := pflag.BoolP("compact", "C", false, "use compact table representation")
 	version := pflag.BoolP("version", "V", false, "show version and exit")
 	onlyBest := pflag.BoolP("best", "B", false, "show only best deals")
+	itemsList := pflag.StringP("list", "l", "flashlight",
+		fmt.Sprintf("used coupons list, one from: %s", allowed))
 	_ = pflag.StringP("sort-by", "S", "price", "not yet implemented")
-	_ = pflag.StringP("list", "l", "flashlight", "not yet implemented")
 	_ = pflag.BoolP("deskending", "d", false, "not yet implemented")
 	pflag.Parse()
 
@@ -58,10 +66,15 @@ func main() {
 		os.Exit(0)
 	}
 
+	url, ok := Links[*itemsList]
+	if !ok {
+		log.Fatalf("invalid choice '%s', allowed one from: %s\n", *itemsList, allowed)
+	}
+
 	categories := uniqOpts(*categoriesGlob)
 	names := uniqOpts(*namesGlob)
 
-	doc, err := parseList(ledFlashlightsList)
+	doc, err := parseList(url)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -138,7 +151,7 @@ func main() {
 }
 
 func parseList(url string) (*html.Node, error) {
-	resp, err := http.Get(ledFlashlightsList)
+	resp, err := http.Get(url)
 	if err != nil {
 		return nil, err
 	}
