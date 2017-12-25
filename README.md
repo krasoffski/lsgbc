@@ -6,6 +6,61 @@ In short words, `lsgbs` is a command line interface for
 https://couponsfromchina.com/ which allows you to sort, include or exclude
 different types of items for the best deal look up.
 
+## Installation
+
+There are compiled binaries for `amd64` architecture for linux, windows and
+darvin platforms. Please, find these files in a release menu of the project.
+
+For creating binaries you need `Git` and `Golang` compiler with version equal
+or bigger than `1.8` installed. Please, make sure you have properly configured
+`GOPATH` and system path variables:
+ - Add `$GOROOT/bin` to system path.
+ - Add `$GOPATH/bin` to system path.
+
+### Manual installation
+
+Before all, please clone this repository with command:
+
+```bash
+$ git clone https://github.com/krasoffski/lsgbc
+```
+
+And change working directory to cloned repository: `cd lsgbc`
+
+#### Using `make all` target
+
+Installation with `make all` target performs following steps (requires `make`):
+ - Download and install [`dep`](https://github.com/golang/dep) package manager.
+ - Download dependencies with `dep` command to `vendor` directory.
+ - Create binaries for windows, linux and darvin in the `dist` directory.
+
+#### Without `make` utility
+
+If you get stuck with `make` command, e.g. on `windows` platform, you can
+perform all steps manually:
+
+```bash
+# Install `dep` package manager (see note about system path).
+$ go get -u github.com/golang/dep/cmd/dep
+# Download requred dependencies.
+$ dep ensure
+# Build executable file for your platform
+$ go build
+# Check created binary.
+$ ./lsgbc --help
+Usage of ./lsgbc:
+  -B, --best=false: show only best deals
+  -c, --categories="*": comma separated list of categories (case sensitive), e.g. 'aa,b*,cc'
+  -C, --compact=false: use compact table representation
+  -d, --deskending=false: not yet implemented
+  -l, --list="flashlight": not yet implemented
+  -M, --max-price=1000: maximum discount price
+  -m, --min-price=0: minimal discount price
+  -n, --names="*": comma separated list of names (case sensitive), e.g. 'xx,y*,zz'
+  -S, --sort-by="price": not yet implemented
+  -V, --version=false: show version and exit
+```
+
 ## Usage
 
 For example, you would like to know current price with coupon for `Jetbeam` and
