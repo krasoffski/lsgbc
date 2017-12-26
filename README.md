@@ -59,7 +59,7 @@ perform all steps manually:
       -c, --categories="*": comma separated list of categories (case sensitive), e.g. 'aa,b*,cc'
       -C, --compact=false: use compact table representation
       -d, --descending=false: not yet implemented
-      -l, --list="flashlight": used coupons list, one from: 3d,camera,cleaner,eu,flashlight,knive,rc,smartphone,tv,vaping,xiaomi
+      -l, --list="flashlight": used coupons list, one from: 3d, ... ,xiaomi
       -M, --max-price=1000: maximum discount price
       -m, --min-price=0: minimal discount price
       -n, --names="*": comma separated list of names (case sensitive), e.g. 'xx,y*,zz'
@@ -140,7 +140,7 @@ Dash `-` character as value has following meanings:
 - `DISCOUNT`: you can buy this item without the use of coupon (flash sale).
 - `LOWEST`: there is no information about the lowest price for this item.
 
-### Best deal
+### The best deal
 
 `lsgbc` allows to distinguish "best" deals with option `-B/--best`. This filter
 shows only items with current `PRICE` equal or less than `LOWEST*1.1`.
@@ -163,7 +163,11 @@ $ ./lsgbc-linux-amd64 --max-price=15 --categories="led*" --best
                                                                              ITEMS   |        7
                                                                          +-----------+-----------------+
 ```
-This table contains only deals for `CATEGORY` equals to `led-flashlights` with
-maximum `PRICE` is `$15` where `PRICE` is around of `LOWEST` seen price. E.g.
-the `PRICE` of `Lumintop Tool Nichia 219BT Flashlight` is `$10` and this less
-than `LOWEST` price multiply by `1.1` (10.0 < 10.01=9.1*1.1).
+This table contains only deals for:
+ - Maximum `PRICE` is `$15`.
+ - `CATEGORY` equals to `led-flashlights`.
+ - `PRICE` is around of `LOWEST`.
+ - Items sorted by ascending the `PRICE`.
+
+E.g. the `PRICE` of `Lumintop Tool Nichia 219BT Flashlight` is `$10` and this
+less than `LOWEST` price multiply by `1.1` (10.0 < 10.01=9.1*1.1).
