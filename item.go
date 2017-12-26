@@ -58,7 +58,7 @@ func main() {
 	itemsList := pflag.StringP("list", "l", "flashlight",
 		fmt.Sprintf("used coupons list, one from: %s", allowed))
 	_ = pflag.StringP("sort-by", "S", "price", "not yet implemented")
-	_ = pflag.BoolP("deskending", "d", false, "not yet implemented")
+	_ = pflag.BoolP("descending", "d", false, "not yet implemented")
 	pflag.Parse()
 
 	if *version {
