@@ -105,7 +105,9 @@ func main() {
 		filtered = append(filtered, v)
 	}
 	sort.Slice(filtered, func(i, j int) bool { return filtered[i].Price < filtered[j].Price })
+	// _ = *compactTable
 	printfTable(os.Stdout, filtered, *compactTable)
+	// fmt.Println(filtered[0].Category)
 }
 
 func printfTable(out io.Writer, lst []*item, compact bool) {
@@ -126,7 +128,7 @@ func printfTable(out io.Writer, lst []*item, compact bool) {
 		tablewriter.ALIGN_RIGHT,
 		tablewriter.ALIGN_RIGHT,
 		tablewriter.ALIGN_RIGHT,
-		// tablewriter.ALIGN_LEFT,
+		tablewriter.ALIGN_LEFT,
 	})
 
 	var count int
@@ -140,7 +142,7 @@ func printfTable(out io.Writer, lst []*item, compact bool) {
 			nonZero(v.Discount),
 			nonZero(v.Lowest),
 		)
-		if compact {
+		if !compact {
 			row = append(row, v.Category)
 		}
 		table.Append(row)
