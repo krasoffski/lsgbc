@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"math"
 	"net/http"
@@ -81,32 +82,9 @@ func main() {
 
 	forEachNode(doc, forEachTR, nil)
 
-	sort.Slice(items, func(i, j int) bool { return items[i].Price < items[j].Price })
-
-	fmt.Println()
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetAutoWrapText(false)
-	table.SetBorder(false)
-
-	if *compactTable {
-		table.SetHeader([]string{"#", "N", "P, $", "D, %", "L, $"})
-	} else {
-		table.SetHeader([]string{"Nu", "Name", "Price, $", "Discount, %", "Lowest, $", "Category"})
-	}
-
-	table.SetColumnAlignment([]int{
-		tablewriter.ALIGN_RIGHT,
-		tablewriter.ALIGN_LEFT,
-		tablewriter.ALIGN_RIGHT,
-		tablewriter.ALIGN_RIGHT,
-		tablewriter.ALIGN_RIGHT,
-		// tablewriter.ALIGN_LEFT,
-	})
-
-	var count int
+	filtered := make([]*item, 0)
 
 	for _, v := range items {
-		// NOTE: add filters here.
 		if !globWords(v.Category, categories) {
 			continue
 		}
@@ -124,7 +102,35 @@ func main() {
 				continue
 			}
 		}
+		filtered = append(filtered, v)
+	}
+	sort.Slice(filtered, func(i, j int) bool { return filtered[i].Price < filtered[j].Price })
+	printfTable(os.Stdout, filtered, *compactTable)
+}
 
+func printfTable(out io.Writer, lst []*item, compact bool) {
+	fmt.Println()
+	table := tablewriter.NewWriter(out)
+	table.SetAutoWrapText(false)
+	table.SetBorder(false)
+
+	if compact {
+		table.SetHeader([]string{"#", "N", "P, $", "D, %", "L, $"})
+	} else {
+		table.SetHeader([]string{"Nu", "Name", "Price, $", "Discount, %", "Lowest, $", "Category"})
+	}
+
+	table.SetColumnAlignment([]int{
+		tablewriter.ALIGN_RIGHT,
+		tablewriter.ALIGN_LEFT,
+		tablewriter.ALIGN_RIGHT,
+		tablewriter.ALIGN_RIGHT,
+		tablewriter.ALIGN_RIGHT,
+		// tablewriter.ALIGN_LEFT,
+	})
+
+	var count int
+	for _, v := range lst {
 		row := make([]string, 0, 6) // Do not allocate new memory during append.
 
 		row = append(row,
@@ -134,14 +140,14 @@ func main() {
 			nonZero(v.Discount),
 			nonZero(v.Lowest),
 		)
-		if !*compactTable {
+		if compact {
 			row = append(row, v.Category)
 		}
 		table.Append(row)
 		count++
 	}
 
-	if *compactTable {
+	if compact {
 		table.SetFooter([]string{"", "", "", "", fmt.Sprintf("%d", count)})
 	} else {
 		table.SetFooter([]string{"", "", "", "", "Items", fmt.Sprintf("%d", count)})
