@@ -58,7 +58,8 @@ func main() {
 	onlyBest := pflag.BoolP("best", "B", false, "show only best deals")
 	itemsList := pflag.StringP("list", "l", "flashlight",
 		fmt.Sprintf("used coupons list, one from: %s", allowed))
-	_ = pflag.StringP("sort-by", "S", "price", "not yet implemented")
+	sortBy := pflag.StringP("sort-by", "S", "price",
+		"sort table by column, 'price' or 'discount'")
 	_ = pflag.BoolP("descending", "d", false, "not yet implemented")
 	pflag.Parse()
 
@@ -104,10 +105,15 @@ func main() {
 		}
 		filtered = append(filtered, v)
 	}
-	sort.Slice(filtered, func(i, j int) bool { return filtered[i].Price < filtered[j].Price })
-	// _ = *compactTable
+	var sortByFunc func(int, int) bool
+	switch *sortBy {
+	case "d", "discount":
+		sortByFunc = func(i, j int) bool { return filtered[i].Discount > filtered[j].Discount }
+	case "p", "price":
+		sortByFunc = func(i, j int) bool { return filtered[i].Price < filtered[j].Price }
+	}
+	sort.Slice(filtered, sortByFunc)
 	printfTable(os.Stdout, filtered, *compactTable)
-	// fmt.Println(filtered[0].Category)
 }
 
 func printfTable(out io.Writer, lst []*item, compact bool) {
