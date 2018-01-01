@@ -13,20 +13,6 @@ import (
 // Version is version of package.
 var Version = "0.0.0"
 
-type item struct {
-	No       int
-	Name     string
-	Category string
-	Link     string
-	Usual    float64
-	Price    float64
-	Discount float64
-	Lowest   float64
-	Coupon   string
-}
-
-// type items []*item
-
 var items []*item
 
 func main() {
@@ -100,5 +86,6 @@ func main() {
 		sortByFunc = func(i, j int) bool { return filtered[i].Price < filtered[j].Price }
 	}
 	sort.Slice(filtered, sortByFunc)
-	printfTable(os.Stdout, filtered, opts.CompactTable)
+	fmt.Println()
+	printfTable(os.Stdout, filtered, &opts)
 }

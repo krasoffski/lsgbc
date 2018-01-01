@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io"
 	"log"
 	"math"
 	"net/http"
@@ -10,58 +9,23 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/olekukonko/tablewriter"
 	glob "github.com/ryanuber/go-glob"
 	"golang.org/x/net/html"
 )
 
-func printfTable(out io.Writer, lst []*item, compact bool) {
-	fmt.Println()
-	table := tablewriter.NewWriter(out)
-	table.SetAutoWrapText(false)
-	table.SetBorder(false)
-
-	if compact {
-		table.SetHeader([]string{"#", "N", "P, $", "D, %", "L, $"})
-	} else {
-		table.SetHeader([]string{"Nu", "Name", "Price, $", "Discount, %", "Lowest, $", "Category"})
-	}
-
-	table.SetColumnAlignment([]int{
-		tablewriter.ALIGN_RIGHT,
-		tablewriter.ALIGN_LEFT,
-		tablewriter.ALIGN_RIGHT,
-		tablewriter.ALIGN_RIGHT,
-		tablewriter.ALIGN_RIGHT,
-		tablewriter.ALIGN_LEFT,
-	})
-
-	var count int
-	for _, v := range lst {
-		row := make([]string, 0, 6) // Do not allocate new memory during append.
-
-		row = append(row,
-			fmt.Sprintf("%d", v.No),
-			v.Name,
-			fmt.Sprintf("%.1f", v.Price),
-			nonZero(v.Discount),
-			nonZero(v.Lowest),
-		)
-		if !compact {
-			row = append(row, v.Category)
-		}
-		table.Append(row)
-		count++
-	}
-
-	if compact {
-		table.SetFooter([]string{"", "", "", "", fmt.Sprintf("%d", count)})
-	} else {
-		table.SetFooter([]string{"", "", "", "", "Items", fmt.Sprintf("%d", count)})
-	}
-
-	table.Render()
+type item struct {
+	No       int
+	Name     string
+	Category string
+	Link     string
+	Usual    float64
+	Price    float64
+	Discount float64
+	Lowest   float64
+	Coupon   string
 }
+
+// type items []*item
 
 func parseList(url string) (*html.Node, error) {
 	resp, err := http.Get(url)
