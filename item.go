@@ -7,114 +7,13 @@ import (
 	"math"
 	"net/http"
 	"net/url"
-	"os"
-	"sort"
 	"strconv"
 	"strings"
 
-	"github.com/ogier/pflag"
 	"github.com/olekukonko/tablewriter"
 	glob "github.com/ryanuber/go-glob"
 	"golang.org/x/net/html"
 )
-
-// Version is version of package.
-var Version = "0.0.0"
-
-type item struct {
-	No       int
-	Name     string
-	Category string
-	Link     string
-	Usual    float64
-	Price    float64
-	Discount float64
-	Lowest   float64
-	Coupon   string
-}
-
-// type items []*item
-
-var items []*item
-
-func main() {
-
-	// This code smells.
-	allowedList := make([]string, 0, len(Links))
-	for k := range Links {
-		allowedList = append(allowedList, k)
-	}
-	sort.Slice(allowedList, func(i, j int) bool { return allowedList[i] < allowedList[j] })
-	allowed := strings.Join(allowedList, ",")
-
-	minPrice := pflag.Float64P("min-price", "m", 0.0, "minimal discount price")
-	maxPrice := pflag.Float64P("max-price", "M", 1000.0, "maximum discount price")
-	categoriesGlob := pflag.StringP("categories", "c", "*",
-		"comma separated list of categories (case sensitive), e.g. 'aa,b*,cc'")
-	namesGlob := pflag.StringP("names", "n", "*",
-		"comma separated list of names (case sensitive), e.g. 'xx,y*,zz'")
-	compactTable := pflag.BoolP("compact", "C", false, "use compact table representation")
-	version := pflag.BoolP("version", "V", false, "show version and exit")
-	onlyBest := pflag.BoolP("best", "B", false, "show only best deals")
-	itemsList := pflag.StringP("list", "l", "flashlight",
-		fmt.Sprintf("used coupons list, one from: %s", allowed))
-	sortBy := pflag.StringP("sort-by", "S", "price",
-		"sort table by column, 'price' or 'discount'")
-	_ = pflag.BoolP("descending", "d", false, "not yet implemented")
-	pflag.Parse()
-
-	if *version {
-		fmt.Printf("Version is: %s\n", Version)
-		os.Exit(0)
-	}
-
-	url, ok := Links[*itemsList]
-	if !ok {
-		log.Fatalf("invalid choice '%s', allowed one from: %s\n", *itemsList, allowed)
-	}
-
-	categories := uniqOpts(*categoriesGlob)
-	names := uniqOpts(*namesGlob)
-
-	doc, err := parseList(url)
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	forEachNode(doc, forEachTR, nil)
-
-	filtered := make([]*item, 0)
-
-	for _, v := range items {
-		if !globWords(v.Category, categories) {
-			continue
-		}
-
-		if !globWords(v.Name, names) {
-			continue
-		}
-
-		if v.Price < *minPrice || v.Price > *maxPrice {
-			continue
-		}
-
-		if *onlyBest {
-			if v.Price > v.Lowest*1.1 {
-				continue
-			}
-		}
-		filtered = append(filtered, v)
-	}
-	var sortByFunc func(int, int) bool
-	switch *sortBy {
-	case "d", "discount":
-		sortByFunc = func(i, j int) bool { return filtered[i].Discount > filtered[j].Discount }
-	case "p", "price":
-		sortByFunc = func(i, j int) bool { return filtered[i].Price < filtered[j].Price }
-	}
-	sort.Slice(filtered, sortByFunc)
-	printfTable(os.Stdout, filtered, *compactTable)
-}
 
 func printfTable(out io.Writer, lst []*item, compact bool) {
 	fmt.Println()
