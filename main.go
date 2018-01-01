@@ -46,9 +46,6 @@ func main() {
 		log.Fatalf("invalid choice '%s', allowed one from: %s\n", opts.List, allowed)
 	}
 
-	categories := uniqOpts(opts.Categories)
-	names := uniqOpts(opts.Names)
-
 	doc, err := parseList(url)
 	if err != nil {
 		log.Fatalln(err)
@@ -56,28 +53,8 @@ func main() {
 
 	forEachNode(doc, forEachTR, nil)
 
-	filtered := make([]*item, 0)
+	filtered := sortOut(items, &opts)
 
-	for _, v := range items {
-		if !globWords(v.Category, categories) {
-			continue
-		}
-
-		if !globWords(v.Name, names) {
-			continue
-		}
-
-		if v.Price < opts.MinPrice || v.Price > opts.MaxPrice {
-			continue
-		}
-
-		if opts.ShowBest {
-			if v.Price > v.Lowest*1.1 {
-				continue
-			}
-		}
-		filtered = append(filtered, v)
-	}
 	var sortByFunc func(int, int) bool
 	switch opts.SortBy {
 	case "d", "discount":
