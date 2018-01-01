@@ -4,5 +4,6 @@ go:
 
 script:
   - make all
+  - make clean
 
 sudo: false
