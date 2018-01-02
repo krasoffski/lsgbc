@@ -51,7 +51,7 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	forEachNode(doc, forEachTR, nil)
+	forEachNode(doc, forEachTR, check)
 
 	filtered := sortOut(items, &opts)
 
