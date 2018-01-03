@@ -22,7 +22,7 @@ func parseList(url string) (*html.Node, error) {
 	return doc, nil
 }
 
-func check(n *html.Node) bool {
+func skipByPriceTable(n *html.Node) bool {
 	if n.Type == html.ElementNode && n.Data == "table" {
 		for _, attr := range n.Attr {
 			if attr.Key == "id" && attr.Val == "bypricewithcoupon" {
@@ -85,14 +85,16 @@ func forEachTD(n *html.Node, items []string) []string {
 	return items
 }
 
-func forEachNode(n *html.Node, fnc func(*html.Node), check func(*html.Node) bool) {
+func forEachNode(n *html.Node, fnc func(*html.Node), skip ...func(*html.Node) bool) {
+	for _, s := range skip {
+		if s(n) {
+			return
+		}
+	}
 	if fnc != nil {
 		fnc(n)
 	}
 	for c := n.FirstChild; c != nil; c = c.NextSibling {
-		if check(c) {
-			continue
-		}
-		forEachNode(c, fnc, check)
+		forEachNode(c, fnc, skipByPriceTable)
 	}
 }

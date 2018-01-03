@@ -51,7 +51,7 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	forEachNode(doc, forEachTR, check)
+	forEachNode(doc, forEachTR, skipByPriceTable)
 
 	filtered := sortOut(items, &opts)
 
