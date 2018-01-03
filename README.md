@@ -54,16 +54,15 @@ perform all steps manually:
  - Check created binary.
     ```
     $ ./lsgbc --help
-    Usage of lsgbc
+    Usage of ./lsgbc:
       -B, --best=false: show only best deals
       -c, --categories="*": comma separated list of categories (case sensitive), e.g. 'aa,b*,cc'
       -C, --compact=false: use compact table representation
-      -d, --descending=false: not yet implemented
-      -l, --list="flashlight": used coupons list, one from: 3d, ... ,xiaomi
+      -l, --list="flashlight": used coupons list, one from: 3d,...,xiaomi
       -M, --max-price=1000: maximum discount price
       -m, --min-price=0: minimal discount price
       -n, --names="*": comma separated list of names (case sensitive), e.g. 'xx,y*,zz'
-      -S, --sort-by="price": not yet implemented
+      -S, --sort-by="price": sort table by column, 'price' or 'discount'
       -V, --version=false: show version and exit
     ```
 
@@ -171,3 +170,28 @@ This table contains only deals for:
 
 E.g. the `PRICE` of `Lumintop Tool Nichia 219BT Flashlight` is `$10` and this
 less than `LOWEST` price multiply by `1.1` (10.0 < 10.01=9.1*1.1).
+
+### Sorting items
+
+You can sort items by `PRICE` or by `DISCOUNT`. This cab be done using option
+`-S/--sort-by` with value `discount` or `d` for shortness to sort by decreasing
+of `DISCOUNT` percents.
+
+```
+$ ./dist/lsgbc-linux-amd64 -C -M 30 -c 'led*' -n 'Lumintop*' -S d 
+
+   #  |                       N                        | P, $ | D, % | L, $  
++-----+------------------------------------------------+------+------+------+
+  184 | Lumintop Copper Tool AAA XP-G2 R5 Flashlight   | 21.0 | 30.0 | 20.0  
+  188 | Lumintop IYP365 CW Flashlight                  | 10.0 | 20.7 | 10.0  
+  183 | Lumintop Copper Tool AAA Nichia 219 Flashlight | 20.0 |    - | 20.0  
+  189 | Lumintop IYP365 NW Flashlight                  | 12.0 |    - | 12.0  
+  197 | Lumintop Tool LED Keychain Flashlight          | 10.0 |    - |  9.0  
+  198 | Lumintop Tool Nichia 219BT Flashlight          | 10.0 |    - |  9.1  
++-----+------------------------------------------------+------+------+------+
+                                                                        6    
+                                                                     +------+
+```
+
+Items with flash sale has empty discount field. As result, discount for these
+items is replaced with `-` and shown at the end of table (zero discount).
