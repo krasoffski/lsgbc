@@ -13,6 +13,7 @@ import (
 // Version is version of package.
 var Version = "0.0.0"
 
+// TODO: Get rid of global var!!!
 var items []*item
 
 func main() {
