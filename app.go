@@ -4,6 +4,7 @@ package main
 type AppOpts struct {
 	Categories   string
 	CompactTable bool
+	FlashSale    bool
 	List         string
 	MaxPrice     float64
 	MinPrice     float64

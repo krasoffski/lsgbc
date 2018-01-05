@@ -22,6 +22,13 @@ func sortOut(items []*item, opts *AppOpts) []*item {
 				continue
 			}
 		}
+
+		if opts.FlashSale {
+			if v.Discount != 0 {
+				continue
+			}
+		}
+
 		filtered = append(filtered, v)
 	}
 

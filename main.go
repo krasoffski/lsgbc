@@ -27,6 +27,7 @@ func main() {
 	allowed := strings.Join(allowedList, ",")
 
 	pflag.BoolVarP(&opts.CompactTable, "compact", "C", false, "use compact table representation")
+	pflag.BoolVarP(&opts.FlashSale, "flash-sale", "F", false, "show only flash sale deals")
 	pflag.BoolVarP(&opts.ShowBest, "best", "B", false, "show only best deals")
 	pflag.BoolVarP(&opts.Version, "version", "V", false, "show version and exit")
 	pflag.Float64VarP(&opts.MaxPrice, "max-price", "M", 1000.0, "maximum discount price")
