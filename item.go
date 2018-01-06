@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	glob "github.com/ryanuber/go-glob"
+	"golang.org/x/net/html"
 )
 
 type item struct {
@@ -50,9 +51,47 @@ func nonZero(val float64) string {
 	return printable
 }
 
-// func makeItems(rows [][]string) []*item {
+func printChildren(n *html.Node) {
+	var i int
+	for c := n.FirstChild; c != nil; c = c.NextSibling {
+		fmt.Printf("%d '%r' -> '%v'\n", i, c.Data, c.FirstChild)
+		i++
+	}
+}
 
-// }
+func makeItemsFromURL(url string) ([]*item, error) {
+	doc, err := parseList(url)
+	if err != nil {
+		return []*item{}, err
+	}
+
+	tableNode := findNode(doc, func(n *html.Node) bool {
+		return checkNodeID(n, "table", "alphabetically")
+	})
+
+	tbodyNode := findNode(tableNode, func(n *html.Node) bool {
+		return checkNodeID(n, "tbody", "")
+	})
+
+	trNodes := getTableTrNodes(tbodyNode)
+	items := make([]*item, 0, len(trNodes))
+
+	for _, tr := range trNodes[1:2] {
+		for c := tr.FirstChild; c != nil; c = c.NextSibling {
+
+			if c.Data != "td" {
+				continue
+			}
+			for cc := c.FirstChild; cc != nil; cc = c.NextSibling {
+
+				cells := getTrCells(cc)
+				fmt.Println(cells)
+			}
+		}
+		// items = append(items, makeItem(cells))
+	}
+	return items, nil
+}
 
 func makeItem(c []string) *item {
 	var err error

@@ -1,14 +1,12 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 
 	"golang.org/x/net/html"
 )
-
-type collectorFunc func([]*html.Node, *html.Node) []*html.Node
-type checkFunc func(*html.Node) bool
 
 func parseList(url string) (*html.Node, error) {
 	resp, err := http.Get(url)
@@ -48,12 +46,12 @@ func getTableTrNodes(n *html.Node) []*html.Node {
 	return nodes
 }
 
-// NOTE: think about passing pointer to slice instead of return.
-func forEachTD(n *html.Node, items []string) []string {
+func getTrCells(n *html.Node) []string {
+	cells := make([]string, 0)
 	for c := n.FirstChild; c != nil; c = c.NextSibling {
 		switch c.Type {
 		case html.TextNode:
-			items = append(items, strings.TrimSpace(c.Data))
+			cells = append(cells, strings.TrimSpace(c.Data))
 		case html.ElementNode:
 			switch c.Data {
 			case "a":
@@ -69,22 +67,23 @@ func forEachTD(n *html.Node, items []string) []string {
 				if childNode.Data == "img" { // ugly hack for skipping img cell
 					continue
 				}
-				items = append(items, url, childNode.Data)
+				cells = append(cells, url, childNode.Data)
 			case "span":
-				items = append(items, c.FirstChild.FirstChild.Data) // NOTE: OMG
+				cells = append(cells, c.FirstChild.FirstChild.Data) // NOTE: OMG
 			}
 		}
 	}
-	return items
+	fmt.Println(cells)
+	return cells
 }
 
-func findNode(n *html.Node, cf checkFunc) *html.Node {
-	if cf(n) {
+func findNode(n *html.Node, check func(*html.Node) bool) *html.Node {
+	if check(n) {
 		return n
 	}
 
 	for c := n.FirstChild; c != nil; c = c.NextSibling {
-		node := findNode(c, cf)
+		node := findNode(c, check)
 		if node != nil {
 			return node
 		}

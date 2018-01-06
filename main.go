@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/ogier/pflag"
-	"golang.org/x/net/html"
 )
 
 // Version is version of package.
@@ -49,21 +48,10 @@ func main() {
 		log.Fatalf("invalid choice '%s', allowed one from: %s\n", opts.List, allowed)
 	}
 
-	doc, err := parseList(url)
+	items, err := makeItemsFromURL(url)
 	if err != nil {
 		log.Fatalln(err)
 	}
-
-	tableNode := findNode(doc, func(n *html.Node) bool {
-		return checkNodeID(n, "table", "alphabetically")
-	})
-	tbodyNode := findNode(tableNode, func(n *html.Node) bool {
-		return checkNodeID(n, "tbody", "")
-	})
-
-	fmt.Println(len(forEachTR(tbodyNode)))
-
-	return
 
 	filtered := sortOut(items, &opts)
 
