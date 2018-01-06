@@ -50,6 +50,10 @@ func nonZero(val float64) string {
 	return printable
 }
 
+// func makeItems(rows [][]string) []*item {
+
+// }
+
 func makeItem(c []string) *item {
 	var err error
 	itm := new(item)

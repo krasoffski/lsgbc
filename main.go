@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/ogier/pflag"
+	"golang.org/x/net/html"
 )
 
 // Version is version of package.
@@ -53,7 +54,16 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	forEachNode(doc, forEachTR, skipByPriceTable)
+	tableNode := findNode(doc, func(n *html.Node) bool {
+		return checkNodeID(n, "table", "alphabetically")
+	})
+	tbodyNode := findNode(tableNode, func(n *html.Node) bool {
+		return checkNodeID(n, "tbody", "")
+	})
+
+	fmt.Println(len(forEachTR(tbodyNode)))
+
+	return
 
 	filtered := sortOut(items, &opts)
 

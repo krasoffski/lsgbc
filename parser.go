@@ -1,12 +1,14 @@
 package main
 
 import (
-	"log"
 	"net/http"
 	"strings"
 
 	"golang.org/x/net/html"
 )
+
+type collectorFunc func([]*html.Node, *html.Node) []*html.Node
+type checkFunc func(*html.Node) bool
 
 func parseList(url string) (*html.Node, error) {
 	resp, err := http.Get(url)
@@ -22,10 +24,13 @@ func parseList(url string) (*html.Node, error) {
 	return doc, nil
 }
 
-func skipByPriceTable(n *html.Node) bool {
-	if n.Type == html.ElementNode && n.Data == "table" {
+func checkNodeID(n *html.Node, data, id string) bool {
+	if n.Type == html.ElementNode && n.Data == data {
+		if id == "" {
+			return true
+		}
 		for _, attr := range n.Attr {
-			if attr.Key == "id" && attr.Val == "bypricewithcoupon" {
+			if attr.Key == "id" && attr.Val == id {
 				return true
 			}
 		}
@@ -33,26 +38,14 @@ func skipByPriceTable(n *html.Node) bool {
 	return false
 }
 
-func forEachTR(n *html.Node) {
-	if n.Type == html.ElementNode && n.Data == "tr" { // row
-		cells := make([]string, 0, 9)
-		for c := n.FirstChild; c != nil; c = c.NextSibling {
-			if c.Type == html.ElementNode && c.Data != "td" {
-				continue
-			}
-			cells = forEachTD(c, cells)
+func getTableTrNodes(n *html.Node) []*html.Node {
+	nodes := make([]*html.Node, 0)
+	for c := n.FirstChild; c != nil; c = c.NextSibling {
+		if c.Type == html.ElementNode && c.Data == "tr" { // row
+			nodes = append(nodes, c)
 		}
-
-		if len(cells) == 0 { // skip table header, need improve
-			return
-		}
-
-		if len(cells) < 6 {
-			log.Fatalf("too few cells for %v", cells[0])
-		}
-
-		items = append(items, makeItem(cells))
 	}
+	return nodes
 }
 
 // NOTE: think about passing pointer to slice instead of return.
@@ -85,16 +78,17 @@ func forEachTD(n *html.Node, items []string) []string {
 	return items
 }
 
-func forEachNode(n *html.Node, fnc func(*html.Node), skip ...func(*html.Node) bool) {
-	for _, s := range skip {
-		if s(n) {
-			return
+func findNode(n *html.Node, cf checkFunc) *html.Node {
+	if cf(n) {
+		return n
+	}
+
+	for c := n.FirstChild; c != nil; c = c.NextSibling {
+		node := findNode(c, cf)
+		if node != nil {
+			return node
 		}
 	}
-	if fnc != nil {
-		fnc(n)
-	}
-	for c := n.FirstChild; c != nil; c = c.NextSibling {
-		forEachNode(c, fnc, skipByPriceTable)
-	}
+
+	return nil
 }
