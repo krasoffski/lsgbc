@@ -13,5 +13,11 @@
 # Ignoring vendor directory due to dep for now
 vendor
 
-# Ignoring dist directory with binaries
+# Build binaries
 dist
+
+# Debug binaries
+debug
+
+# Editor directories
+.vscode
