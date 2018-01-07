@@ -36,10 +36,10 @@ func checkNodeID(n *html.Node, data, id string) bool {
 	return false
 }
 
-func getTableTrNodes(n *html.Node) []*html.Node {
+func getChildren(n *html.Node, data string) []*html.Node {
 	nodes := make([]*html.Node, 0)
 	for c := n.FirstChild; c != nil; c = c.NextSibling {
-		if c.Type == html.ElementNode && c.Data == "tr" { // row
+		if c.Type == html.ElementNode && c.Data == data {
 			nodes = append(nodes, c)
 		}
 	}
@@ -90,4 +90,14 @@ func findNode(n *html.Node, check func(*html.Node) bool) *html.Node {
 	}
 
 	return nil
+}
+
+func traverseNode(n *html.Node, skip func(*html.Node) bool, nodes []*html.Node) []*html.Node {
+	for c := n.FirstChild; c != nil; c = c.NextSibling {
+		if !skip(c) {
+			nodes = append(nodes, c)
+		}
+		nodes = traverseNode(c, skip, nodes)
+	}
+	return nodes
 }

@@ -49,6 +49,7 @@ func main() {
 	}
 
 	items, err := makeItemsFromURL(url)
+	return
 	if err != nil {
 		log.Fatalln(err)
 	}

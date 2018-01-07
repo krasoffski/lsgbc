@@ -73,23 +73,29 @@ func makeItemsFromURL(url string) ([]*item, error) {
 		return checkNodeID(n, "tbody", "")
 	})
 
-	trNodes := getTableTrNodes(tbodyNode)
+	trNodes := getChildren(tbodyNode, "tr")
 	items := make([]*item, 0, len(trNodes))
 
-	for _, tr := range trNodes[1:2] {
-		for c := tr.FirstChild; c != nil; c = c.NextSibling {
-
-			if c.Data != "td" {
-				continue
+	for _, tr := range trNodes[3:4] {
+		qqq := traverseNode(tr, func(n *html.Node) bool {
+			if strings.TrimSpace(n.Data) == "" ||
+				n.Data == "br" ||
+				n.Data == "td" ||
+				n.Data == "img" ||
+				n.Data == "strong" ||
+				n.FirstChild != nil && n.FirstChild.Data == "img" ||
+				n.Parent != nil && n.Parent.Data == "strong" {
+				return true
 			}
-			for cc := c.FirstChild; cc != nil; cc = c.NextSibling {
-
-				cells := getTrCells(cc)
-				fmt.Println(cells)
-			}
+			return false
+		}, nil)
+		for _, data := range qqq {
+			fmt.Println(data)
+			fmt.Printf("%#v\n\n", data.Data)
 		}
-		// items = append(items, makeItem(cells))
+		fmt.Println("Done")
 	}
+
 	return items, nil
 }
 
