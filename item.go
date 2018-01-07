@@ -76,8 +76,8 @@ func makeItemsFromURL(url string) ([]*item, error) {
 	trNodes := getChildren(tbodyNode, "tr")
 	items := make([]*item, 0, len(trNodes))
 
-	for _, tr := range trNodes[3:4] {
-		qqq := traverseNode(tr, func(n *html.Node) bool {
+	for _, tr := range trNodes[1:] {
+		cells := traverseNode(tr, func(n *html.Node) bool {
 			if strings.TrimSpace(n.Data) == "" ||
 				n.Data == "br" ||
 				n.Data == "td" ||
@@ -89,13 +89,12 @@ func makeItemsFromURL(url string) ([]*item, error) {
 			}
 			return false
 		}, nil)
-		for _, data := range qqq {
-			fmt.Println(data)
-			fmt.Printf("%#v\n\n", data.Data)
+		values, err := cellsToStrings(cells)
+		if err != nil {
+			return nil, err
 		}
-		fmt.Println("Done")
+		items = append(items, makeItem(values))
 	}
-
 	return items, nil
 }
 
@@ -114,18 +113,18 @@ func makeItem(c []string) *item {
 	checkError(err)
 	itm.Price, err = strconv.ParseFloat(strings.Trim(c[4], "$"), 64)
 	checkError(err)
+
 	if strings.HasSuffix(c[5], "%") {
 		dotted := strings.Replace(c[5], ",", ".", -1)
 		val, err := strconv.ParseFloat(strings.TrimRight(dotted, "%"), 64)
 		checkError(err)
 		itm.Discount = math.Abs(val)
-		itm.Lowest, _ = strconv.ParseFloat(strings.TrimLeft(c[6], "$"), 64)
-	} else {
-		itm.Lowest, _ = strconv.ParseFloat(strings.TrimLeft(c[5], "$"), 64)
 	}
+	itm.Lowest, _ = strconv.ParseFloat(strings.TrimLeft(c[6], "$"), 64)
 	return itm
 }
 
+// TODO: remove to be more convenient
 func checkError(err error) {
 	if err != nil {
 		log.Fatalln(err)

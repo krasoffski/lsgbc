@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"strings"
@@ -44,6 +45,41 @@ func getChildren(n *html.Node, data string) []*html.Node {
 		}
 	}
 	return nodes
+}
+
+func getAttrByName(n *html.Node, attr string) (string, bool) {
+	for _, a := range n.Attr {
+		if a.Key == attr {
+			return a.Val, true
+		}
+	}
+	return "", false
+}
+
+func cellsToStrings(cells []*html.Node) ([]string, error) {
+	nLen := len(cells)
+	if nLen < 6 || nLen > 7 {
+		return nil, fmt.Errorf("invalid number of nodes %d", nLen)
+	}
+	arr := make([]string, 7)
+	arr[0] = cells[0].Data
+
+	var ok bool
+	if arr[1], ok = getAttrByName(cells[1], "href"); !ok {
+		return nil, errors.New("unable to found item link")
+	}
+
+	arr[2] = cells[2].Data
+	arr[3] = cells[3].Data
+	arr[4] = cells[3].Data
+
+	if len(cells) == 6 {
+		arr[6] = cells[5].Data
+	} else {
+		arr[5] = strings.TrimSpace(cells[5].Data)
+		arr[6] = cells[6].Data
+	}
+	return arr, nil
 }
 
 func getTrCells(n *html.Node) []string {
