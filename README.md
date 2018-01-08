@@ -131,7 +131,7 @@ $ ./lsgbc-linux-amd64 -M 20 -n 'Jet*,Eagle*' --compact
 ### Flash sale and history
 
 Attentive users might have noticed that some items do not have corresponding
-`DISOUNT` percent or `LOWEST` price values. Instead, this value might be
+`DISCOUNT` percent or `LOWEST` price values. Instead, this value might be
 replaced with `-` char.
 
 Dash `-` character as value has following meanings:
@@ -173,25 +173,25 @@ less than `LOWEST` price multiply by `1.1` (10.0 < 10.01=9.1*1.1).
 
 ### Sorting items
 
-You can sort items by `PRICE` or by `DISCOUNT`. This cab be done using option
+You can sort items by `PRICE` or by `DISCOUNT`. This can be done using option
 `-S/--sort-by` with value `discount` or `d` for shortness to sort by decreasing
 of `DISCOUNT` percents.
 
 ```
-$ ./dist/lsgbc-linux-amd64 -C -M 30 -c 'led*' -n 'Lumintop*' -S d 
+$ ./dist/lsgbc-linux-amd64 -C -M 30 -c 'led*' -n 'Lumintop*' -S d
 
-   #  |                       N                        | P, $ | D, % | L, $  
+   #  |                       N                        | P, $ | D, % | L, $
 +-----+------------------------------------------------+------+------+------+
-  184 | Lumintop Copper Tool AAA XP-G2 R5 Flashlight   | 21.0 | 30.0 | 20.0  
-  188 | Lumintop IYP365 CW Flashlight                  | 10.0 | 20.7 | 10.0  
-  183 | Lumintop Copper Tool AAA Nichia 219 Flashlight | 20.0 |    - | 20.0  
-  189 | Lumintop IYP365 NW Flashlight                  | 12.0 |    - | 12.0  
-  197 | Lumintop Tool LED Keychain Flashlight          | 10.0 |    - |  9.0  
-  198 | Lumintop Tool Nichia 219BT Flashlight          | 10.0 |    - |  9.1  
+  184 | Lumintop Copper Tool AAA XP-G2 R5 Flashlight   | 21.0 | 30.0 | 20.0
+  188 | Lumintop IYP365 CW Flashlight                  | 10.0 | 20.7 | 10.0
+  183 | Lumintop Copper Tool AAA Nichia 219 Flashlight | 20.0 |    - | 20.0
+  189 | Lumintop IYP365 NW Flashlight                  | 12.0 |    - | 12.0
+  197 | Lumintop Tool LED Keychain Flashlight          | 10.0 |    - |  9.0
+  198 | Lumintop Tool Nichia 219BT Flashlight          | 10.0 |    - |  9.1
 +-----+------------------------------------------------+------+------+------+
-                                                                        6    
+                                                                        6
                                                                      +------+
 ```
 
 Items with flash sale has empty discount field. As result, discount for these
-items is replaced with `-` and shown at the end of table (zero discount).
+items is replaced with `-` and shown at the end of the table (zero discount).
