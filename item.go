@@ -24,9 +24,10 @@ type item struct {
 	Coupon   string
 }
 
-func globWords(s string, words map[string]struct{}) bool {
-	for c := range words {
-		if glob.Glob(c, s) {
+func globWords(subj string, patterns map[string]struct{}) bool {
+	for p := range patterns {
+		p = strings.Trim(p, "*")
+		if glob.Glob(p, subj+"*") {
 			return true
 		}
 	}
