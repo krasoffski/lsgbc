@@ -42,11 +42,13 @@ tar.gz: clean/dist/tar.gz dist
 	tar -zcvf dist/${BINARY}-${VERSION}-linux-${GOARCH}.tar.gz -C dist ${BINARY}-linux-${GOARCH}
 	tar -zcvf dist/${BINARY}-${VERSION}-darvin-${GOARCH}.tar.gz -C dist ${BINARY}-darwin-${GOARCH}
 	tar -zcvf dist/${BINARY}-${VERSION}-windows-${GOARCH}.tar.gz -C dist ${BINARY}-windows-${GOARCH}.exe
+	cd dist && md5sum *.tar.gz > md5sum.txt
 
 zip: clean/dist/zip dist
 	cd dist && zip ${BINARY}-${VERSION}-linux-${GOARCH}.zip ${BINARY}-linux-${GOARCH}
 	cd dist && zip ${BINARY}-${VERSION}-darvin-${GOARCH}.zip ${BINARY}-darwin-${GOARCH}
 	cd dist && zip ${BINARY}-${VERSION}-windows-${GOARCH}.zip ${BINARY}-windows-${GOARCH}.exe
+	cd dist && md5sum *.zip > md5sum.txt
 
 clean/dist:
 	-rm -rf dist
