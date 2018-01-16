@@ -53,11 +53,12 @@ perform all steps manually:
     ```
  - Check created binary.
     ```
-    $ ./lsgbc --help
-    Usage of ./lsgbc:
+    $ ./dist/lsgbc-linux-amd64 -h
+    Usage of ./dist/lsgbc-linux-amd64:
       -B, --best=false: show only best deals
       -c, --categories="*": comma separated list of categories (case sensitive), e.g. 'aa,b*,cc'
       -C, --compact=false: use compact table representation
+      -F, --flash-sale=false: show only flash sale deals
       -l, --list="flashlight": used coupons list, one from: 3d,...,xiaomi
       -M, --max-price=1000: maximum discount price
       -m, --min-price=0: minimal discount price
@@ -69,15 +70,16 @@ perform all steps manually:
 ## Usage
 
 For example, you would like to know current price with coupon for `Jetbeam` and
-`Eagle Eye` flashlights with price less than `20 ye`. You can use `*` for
-matching to avoid full name/category typing.
+`Eagle Eye` flashlights with price less than `20 ye`. To sort out name/categories
+you can specify begging of names, categories like `-n Jet`, this is equivalent
+of `-n "Jet*"`.
 
 > __Note:__ by default rows are sorted by ascending the `PRICE`.
 
 This can be achieved with following command:
 
 ```
-$ ./lsgbc-linux-amd64 -M 20 -n 'Jet*,Eagle*'
+$ ./lsgbc-linux-amd64 -M 20 -n Jet,Eagle
 
   NO  |                NAME                 | PRICE, $ | DISCOUNT, % | LOWEST, $ |    CATEGORY
 +-----+-------------------------------------+----------+-------------+-----------+-----------------+
@@ -111,7 +113,7 @@ When you get familiar with column names and categories, you might want to use
 compact mode `-C/--compact` on small terminals.
 
 ```
-$ ./lsgbc-linux-amd64 -M 20 -n 'Jet*,Eagle*' --compact
+$ ./lsgbc-linux-amd64 -M 20 -n Jet,Eagle --compact
 
    #  |                  N                  | P, $ | D, % | L, $
 +-----+-------------------------------------+------+------+------+
@@ -147,7 +149,7 @@ shows only items with current `PRICE` equal or less than `LOWEST*1.1`.
 For example:
 
 ```
-$ ./lsgbc-linux-amd64 --max-price=15 --categories="led*" --best
+$ ./lsgbc-linux-amd64 --max-price=15 --categories=led --best
 
   NU  |                  NAME                   | PRICE, $ | DISCOUNT, % | LOWEST, $ |    CATEGORY
 +-----+-----------------------------------------+----------+-------------+-----------+-----------------+
@@ -178,7 +180,7 @@ You can sort items by `PRICE` or by `DISCOUNT`. This can be done using option
 of `DISCOUNT` percents.
 
 ```
-$ ./dist/lsgbc-linux-amd64 -C -M 30 -c 'led*' -n 'Lumintop*' -S d
+$ ./dist/lsgbc-linux-amd64 -C -M 30 -c led -n Lumintop -S d
 
    #  |                       N                        | P, $ | D, % | L, $
 +-----+------------------------------------------------+------+------+------+
