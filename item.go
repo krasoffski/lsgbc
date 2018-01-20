@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"math"
 	"net/url"
 	"strconv"
@@ -24,9 +23,10 @@ type item struct {
 	Coupon   string
 }
 
-func globWords(s string, words map[string]struct{}) bool {
-	for c := range words {
-		if glob.Glob(c, s) {
+func globWords(subj string, patterns map[string]struct{}) bool {
+	for p := range patterns {
+		p = strings.Trim(p, "*")
+		if glob.Glob(p+"*", subj) {
 			return true
 		}
 	}
@@ -49,14 +49,6 @@ func nonZero(val float64) string {
 		printable = "-"
 	}
 	return printable
-}
-
-func printChildren(n *html.Node) {
-	var i int
-	for c := n.FirstChild; c != nil; c = c.NextSibling {
-		fmt.Printf("%d '%r' -> '%v'\n", i, c.Data, c.FirstChild)
-		i++
-	}
 }
 
 func makeItemsFromURL(url string) ([]*item, error) {
@@ -93,40 +85,54 @@ func makeItemsFromURL(url string) ([]*item, error) {
 		if err != nil {
 			return nil, err
 		}
-		items = append(items, makeItem(values))
+		newItem, err := makeItem(values)
+		if err != nil {
+			return nil, err
+		}
+
+		items = append(items, newItem)
 	}
 	return items, nil
 }
 
-func makeItem(c []string) *item {
+func makeItem(c []string) (*item, error) {
 	var err error
 	itm := new(item)
+
 	itm.No, err = strconv.Atoi(c[0])
-	checkError(err)
+	if err != nil {
+		return nil, err
+	}
+
 	itm.Link = c[1]
+
 	u, err := url.Parse(itm.Link)
-	checkError(err)
+	if err != nil {
+		return nil, err
+	}
 	itm.Category = strings.Split(u.Path, "/")[1]
 
 	itm.Name = c[2]
+
 	itm.Usual, err = strconv.ParseFloat(strings.Trim(c[3], "$"), 64)
-	checkError(err)
+	if err != nil {
+		return nil, err
+	}
+
 	itm.Price, err = strconv.ParseFloat(strings.Trim(c[4], "$"), 64)
-	checkError(err)
+	if err != nil {
+		return nil, err
+	}
 
 	if strings.HasSuffix(c[5], "%") {
 		dotted := strings.Replace(c[5], ",", ".", -1)
 		val, err := strconv.ParseFloat(strings.TrimRight(dotted, "%"), 64)
-		checkError(err)
+		if err != nil {
+			return nil, err
+		}
+
 		itm.Discount = math.Abs(val)
 	}
 	itm.Lowest, _ = strconv.ParseFloat(strings.TrimLeft(c[6], "$"), 64)
-	return itm
-}
-
-// TODO: remove to be more convenient
-func checkError(err error) {
-	if err != nil {
-		log.Fatalln(err)
-	}
+	return itm, nil
 }
