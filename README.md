@@ -23,6 +23,7 @@ Before all, please clone this repository with command:
 
 ```bash
 $ git clone https://github.com/krasoffski/lsgbc
+# git clone git@github.com:krasoffski/lsgbc.git
 ```
 
 And change working directory to cloned repository: `cd lsgbc`
