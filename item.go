@@ -11,6 +11,15 @@ import (
 	"golang.org/x/net/html"
 )
 
+var skipNodeData = map[string]bool{
+	"":       true,
+	"br":     true,
+	"td":     true,
+	"img":    true,
+	"strong": true,
+	"span":   true,
+}
+
 type item struct {
 	No       int
 	Name     string

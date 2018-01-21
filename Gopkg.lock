@@ -32,7 +32,7 @@
     "html",
     "html/atom"
   ]
-  revision = "42fe2e1c20de1054d3d30f82cc9fb5b41e2e3767"
+  revision = "5ccada7d0a7ba9aeb5d3aca8d3501b4c2a509fec"
 
 [solve-meta]
   analyzer-name = "dep"
