@@ -59,7 +59,7 @@ func getAttrByName(n *html.Node, attr string) (string, bool) {
 func cellsToStrings(cells []*html.Node) ([]string, error) {
 	nLen := len(cells)
 	if nLen < 6 {
-		return nil, fmt.Errorf("invalid number of nodes %d", nLen)
+		return nil, fmt.Errorf("invalid number of nodes %d for %s", nLen, cells[0].Data)
 	}
 	arr := make([]string, 7)
 	arr[0] = cells[0].Data
@@ -71,7 +71,7 @@ func cellsToStrings(cells []*html.Node) ([]string, error) {
 
 	arr[2] = cells[2].Data
 	arr[3] = cells[3].Data
-	arr[4] = cells[3].Data
+	arr[4] = cells[4].Data
 
 	if len(cells) == 6 {
 		arr[6] = cells[5].Data

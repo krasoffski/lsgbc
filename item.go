@@ -83,9 +83,10 @@ func makeItemsFromURL(url string) ([]*item, error) {
 				n.Data == "br" ||
 				n.Data == "td" ||
 				n.Data == "img" ||
+				n.Data == "span" ||
 				n.Data == "strong" ||
-				n.FirstChild != nil && n.FirstChild.Data == "img" ||
-				n.Parent != nil && n.Parent.Data == "strong" {
+				n.FirstChild != nil && n.FirstChild.Data == "img" {
+				// n.Parent != nil && n.Parent.Data == "strong" {
 				return true
 			}
 			return false
