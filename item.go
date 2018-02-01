@@ -33,9 +33,10 @@ type item struct {
 }
 
 func globWords(subj string, patterns map[string]struct{}) bool {
+	subjLower := strings.ToLower(subj)
 	for p := range patterns {
-		p = strings.Trim(p, "*")
-		if glob.Glob(p+"*", subj) {
+		p = strings.ToLower(strings.Trim(p, "*"))
+		if glob.Glob(p+"*", subjLower) {
 			return true
 		}
 	}
