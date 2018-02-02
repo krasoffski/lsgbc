@@ -10,7 +10,7 @@ different types of items for the best deal look up.
 ## Installation
 
 There are compiled binaries for `amd64` architecture for linux, windows and
-darvin platforms. Please, find these files in a release menu of the project.
+darvin platforms. Please, find these files in the release menu of the project.
 
 For creating binaries you need `Git` and `Golang` compiler with version equal
 or bigger than `1.8` installed. Please, make sure you have properly configured
@@ -41,7 +41,7 @@ Installation with `make all` target performs following steps (requires `make`):
 If you get stuck with `make` command, e.g. on `windows` platform, you can
 perform all steps manually:
 
- - Install `dep` package manager (see note about system path).
+ - Install `dep` package manager (see note about system path) if it not present.
     ```
     $ go get -u github.com/golang/dep/cmd/dep
     ```
@@ -73,7 +73,7 @@ perform all steps manually:
 
 For example, you would like to know current price with coupon for `Jetbeam` and
 `Eagle Eye` flashlights with price less than `20 ye`. To sort out name/categories
-you can specify begging of names, categories like `-n Jet`, this is equivalent
+you can specify begging of names, categories like `-n jet`, this is equivalent
 of `-n "Jet*"`.
 
 > __Note:__ by default rows are sorted by ascending the `PRICE`.
@@ -81,7 +81,7 @@ of `-n "Jet*"`.
 This can be achieved with following command:
 
 ```
-$ ./lsgbc-linux-amd64 -M 20 -n Jet,Eagle
+$ ./lsgbc-linux-amd64 -M 20 -n jet,eagle
 
   NO  |                NAME                 | PRICE, $ | DISCOUNT, % | LOWEST, $ |    CATEGORY
 +-----+-------------------------------------+----------+-------------+-----------+-----------------+
@@ -97,8 +97,6 @@ $ ./lsgbc-linux-amd64 -M 20 -n Jet,Eagle
                                                                          ITEMS   |        8
                                                                      +-----------+-----------------+
 ```
-
-> __Note:__ `-n/--names` and `-c/--categories` options are case sensitive.
 
 There are following fields:
 
