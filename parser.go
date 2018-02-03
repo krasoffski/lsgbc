@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/krasoffski/gomill/htm"
 	"golang.org/x/net/html"
 )
 
@@ -47,15 +48,6 @@ func getChildren(n *html.Node, data string) []*html.Node {
 	return nodes
 }
 
-func getAttrByName(n *html.Node, attr string) (string, bool) {
-	for _, a := range n.Attr {
-		if a.Key == attr {
-			return a.Val, true
-		}
-	}
-	return "", false
-}
-
 func cellsToStrings(cells []*html.Node) ([]string, error) {
 	nLen := len(cells)
 	if nLen < 6 {
@@ -65,7 +57,7 @@ func cellsToStrings(cells []*html.Node) ([]string, error) {
 	arr[0] = cells[0].Data
 
 	var ok bool
-	if arr[1], ok = getAttrByName(cells[1], "href"); !ok {
+	if arr[1], ok = htm.AttrOfNode(cells[1], "href"); !ok {
 		return nil, errors.New("unable to found item link")
 	}
 
@@ -80,52 +72,6 @@ func cellsToStrings(cells []*html.Node) ([]string, error) {
 		arr[6] = cells[6].Data
 	}
 	return arr, nil
-}
-
-func getTrCells(n *html.Node) []string {
-	cells := make([]string, 0)
-	for c := n.FirstChild; c != nil; c = c.NextSibling {
-		switch c.Type {
-		case html.TextNode:
-			cells = append(cells, strings.TrimSpace(c.Data))
-		case html.ElementNode:
-			switch c.Data {
-			case "a":
-				var url string
-				for _, a := range c.Attr {
-					if a.Key != "href" {
-						continue
-					}
-					url = a.Val
-					break // ignoring all other attrs
-				}
-				childNode := c.FirstChild
-				if childNode.Data == "img" { // ugly hack for skipping img cell
-					continue
-				}
-				cells = append(cells, url, childNode.Data)
-			case "span":
-				cells = append(cells, c.FirstChild.FirstChild.Data) // NOTE: OMG
-			}
-		}
-	}
-	fmt.Println(cells)
-	return cells
-}
-
-func findNode(n *html.Node, check func(*html.Node) bool) *html.Node {
-	if check(n) {
-		return n
-	}
-
-	for c := n.FirstChild; c != nil; c = c.NextSibling {
-		node := findNode(c, check)
-		if node != nil {
-			return node
-		}
-	}
-
-	return nil
 }
 
 func traverseNode(n *html.Node, skip func(*html.Node) bool, nodes []*html.Node) []*html.Node {
