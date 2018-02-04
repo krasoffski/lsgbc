@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/krasoffski/gomill/htm"
+	"github.com/krasoffski/gomill/node"
 	"golang.org/x/net/html"
 )
 
@@ -57,7 +57,7 @@ func cellsToStrings(cells []*html.Node) ([]string, error) {
 	arr[0] = cells[0].Data
 
 	var ok bool
-	if arr[1], ok = htm.AttrOfNode(cells[1], "href"); !ok {
+	if arr[1], ok = node.Attr(cells[1], "href"); !ok {
 		return nil, errors.New("unable to found item link")
 	}
 

@@ -4,8 +4,8 @@
 [[projects]]
   branch = "master"
   name = "github.com/krasoffski/gomill"
-  packages = ["htm"]
-  revision = "c8850e75a40787286052fa5f1e9c07703a7ef782"
+  packages = ["node"]
+  revision = "a0b234e06de0fba9a59f170071baab7c6cc4f434"
 
 [[projects]]
   name = "github.com/mattn/go-runewidth"
@@ -43,6 +43,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "57021bb70dcde2de99fc49bb7b7b9c84f935ea5f87988ec950fed1b1332b7b1c"
+  inputs-digest = "3b9229fd2f17bd5267509abb8ec4cd24ec9b4b8d22c211f43b65c51e2b656533"
   solver-name = "gps-cdcl"
   solver-version = 1

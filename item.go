@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/krasoffski/gomill/htm"
+	"github.com/krasoffski/gomill/node"
 	glob "github.com/ryanuber/go-glob"
 	"golang.org/x/net/html"
 )
@@ -68,11 +68,11 @@ func makeItemsFromURL(url string) ([]*item, error) {
 		return []*item{}, err
 	}
 
-	tableNode := htm.FindNode(doc, func(n *html.Node) bool {
+	tableNode := node.Find(doc, func(n *html.Node) bool {
 		return checkNodeID(n, "table", "alphabetically")
 	})
 
-	tbodyNode := htm.FindNode(tableNode, func(n *html.Node) bool {
+	tbodyNode := node.Find(tableNode, func(n *html.Node) bool {
 		return checkNodeID(n, "tbody", "")
 	})
 
@@ -93,6 +93,7 @@ func makeItemsFromURL(url string) ([]*item, error) {
 			}
 			return false
 		}, nil)
+
 		values, err := cellsToStrings(cells)
 		if err != nil {
 			return nil, err
