@@ -62,6 +62,18 @@ func nonZero(val float64) string {
 	return printable
 }
 
+func skip() func(n *html.Node) bool {
+	return node.AnyFnN(
+		func(n *html.Node) bool { return strings.TrimSpace(n.Data) == "" },
+		func(n *html.Node) bool { return n.Data == "br" },
+		func(n *html.Node) bool { return n.Data == "td" },
+		func(n *html.Node) bool { return n.Data == "img" },
+		func(n *html.Node) bool { return n.Data == "span" },
+		func(n *html.Node) bool { return n.Data == "strong" },
+		func(n *html.Node) bool { return n.FirstChild != nil && n.FirstChild.Data == "img" },
+	)
+}
+
 func makeItemsFromURL(url string) ([]*item, error) {
 	doc, err := parseList(url)
 	if err != nil {
@@ -80,19 +92,7 @@ func makeItemsFromURL(url string) ([]*item, error) {
 	items := make([]*item, 0, len(trNodes))
 
 	for _, tr := range trNodes[1:] {
-		cells := traverseNode(tr, func(n *html.Node) bool {
-			if strings.TrimSpace(n.Data) == "" ||
-				n.Data == "br" ||
-				n.Data == "td" ||
-				n.Data == "img" ||
-				n.Data == "span" ||
-				n.Data == "strong" ||
-				n.FirstChild != nil && n.FirstChild.Data == "img" {
-				// n.Parent != nil && n.Parent.Data == "strong" {
-				return true
-			}
-			return false
-		}, nil)
+		cells := node.Traverse(tr, skip(), nil)
 
 		values, err := cellsToStrings(cells)
 		if err != nil {
