@@ -63,7 +63,7 @@ func nonZero(val float64) string {
 }
 
 func skip() func(n *html.Node) bool {
-	return node.AnyFnN(
+	return node.AnyFn(false,
 		func(n *html.Node) bool { return strings.TrimSpace(n.Data) == "" },
 		func(n *html.Node) bool { return n.Data == "br" },
 		func(n *html.Node) bool { return n.Data == "td" },

@@ -5,7 +5,7 @@
   branch = "master"
   name = "github.com/krasoffski/gomill"
   packages = ["node"]
-  revision = "5ee920db1a3f2add660385d312e1b5ff4573ca62"
+  revision = "4c0ff766cbde32d187b66a7fce77c62eef7ad685"
 
 [[projects]]
   name = "github.com/mattn/go-runewidth"
