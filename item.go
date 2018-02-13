@@ -88,7 +88,10 @@ func makeItemsFromURL(url string) ([]*item, error) {
 		return checkNodeID(n, "tbody", "")
 	})
 
-	trNodes := getChildren(tbodyNode, "tr")
+	trNodes := node.Children(tbodyNode, func(n *html.Node) bool {
+		return n.Type == html.ElementNode && n.Data == "tr"
+	})
+
 	items := make([]*item, 0, len(trNodes))
 
 	for _, tr := range trNodes[1:] {

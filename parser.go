@@ -38,16 +38,6 @@ func checkNodeID(n *html.Node, data, id string) bool {
 	return false
 }
 
-func getChildren(n *html.Node, data string) []*html.Node {
-	nodes := make([]*html.Node, 0)
-	for c := n.FirstChild; c != nil; c = c.NextSibling {
-		if c.Type == html.ElementNode && c.Data == data {
-			nodes = append(nodes, c)
-		}
-	}
-	return nodes
-}
-
 func cellsToStrings(cells []*html.Node) ([]string, error) {
 	nLen := len(cells)
 	if nLen < 6 {
