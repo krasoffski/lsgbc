@@ -24,20 +24,6 @@ func parseList(url string) (*html.Node, error) {
 	return doc, nil
 }
 
-func checkNodeID(n *html.Node, data, id string) bool {
-	if n.Type == html.ElementNode && n.Data == data {
-		if id == "" {
-			return true
-		}
-		for _, attr := range n.Attr {
-			if attr.Key == "id" && attr.Val == id {
-				return true
-			}
-		}
-	}
-	return false
-}
-
 func cellsToStrings(cells []*html.Node) ([]string, error) {
 	nLen := len(cells)
 	if nLen < 6 {

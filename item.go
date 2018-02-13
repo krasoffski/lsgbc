@@ -81,11 +81,13 @@ func makeItemsFromURL(url string) ([]*item, error) {
 	}
 
 	tableNode := node.Find(doc, func(n *html.Node) bool {
-		return checkNodeID(n, "table", "alphabetically")
+		id, ok := node.Attr(n, "id")
+		return n.Type == html.ElementNode && n.Data == "table" && ok && id == "alphabetically"
 	})
 
 	tbodyNode := node.Find(tableNode, func(n *html.Node) bool {
-		return checkNodeID(n, "tbody", "")
+		id, ok := node.Attr(n, "id")
+		return n.Type == html.ElementNode && n.Data == "tbody" && !ok && id == ""
 	})
 
 	trNodes := node.Children(tbodyNode, func(n *html.Node) bool {
