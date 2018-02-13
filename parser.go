@@ -49,13 +49,3 @@ func cellsToStrings(cells []*html.Node) ([]string, error) {
 	}
 	return arr, nil
 }
-
-func traverseNode(n *html.Node, skip func(*html.Node) bool, nodes []*html.Node) []*html.Node {
-	for c := n.FirstChild; c != nil; c = c.NextSibling {
-		if !skip(c) {
-			nodes = append(nodes, c)
-		}
-		nodes = traverseNode(c, skip, nodes)
-	}
-	return nodes
-}
