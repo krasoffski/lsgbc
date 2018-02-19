@@ -32,9 +32,9 @@ func main() {
 	pflag.BoolVarP(&opts.Version, "version", "V", false, "show version and exit")
 	pflag.Float64VarP(&opts.MaxPrice, "max-price", "M", 1000.0, "maximum discount price")
 	pflag.Float64VarP(&opts.MinPrice, "min-price", "m", 0.0, "minimal discount price")
-	pflag.StringVarP(&opts.Categories, "categories", "c", "*", "comma separated list of categories (case sensitive), e.g. 'aa,b*,cc'")
+	pflag.StringVarP(&opts.Categories, "categories", "c", "*", "comma separated list of categories (case insensitive), e.g. 'aa,b*,cc'")
 	pflag.StringVarP(&opts.List, "list", "l", "flashlight", fmt.Sprintf("used coupons list, one from: %s", allowed))
-	pflag.StringVarP(&opts.Names, "names", "n", "*", "comma separated list of names (case sensitive), e.g. 'xx,y*,zz'")
+	pflag.StringVarP(&opts.Names, "names", "n", "*", "comma separated list of names (case insensitive), e.g. 'xx,y*,zz'")
 	pflag.StringVarP(&opts.SortBy, "sort-by", "S", "price", "sort table by column, 'price' or 'discount'")
 	pflag.Parse()
 
