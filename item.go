@@ -2,9 +2,6 @@ package main
 
 import (
 	"fmt"
-	"math"
-	"net/url"
-	"strconv"
 	"strings"
 
 	"github.com/krasoffski/gomill/node"
@@ -30,7 +27,6 @@ type item struct {
 	Price    float64
 	Discount float64
 	Lowest   float64
-	Coupon   string
 }
 
 func globWords(subj string, patterns map[string]struct{}) bool {
@@ -62,18 +58,6 @@ func nonZero(val float64) string {
 	return printable
 }
 
-func skip() func(n *html.Node) bool {
-	return node.AnyFn(false,
-		func(n *html.Node) bool { return strings.TrimSpace(n.Data) == "" },
-		func(n *html.Node) bool { return n.Data == "br" },
-		func(n *html.Node) bool { return n.Data == "td" },
-		func(n *html.Node) bool { return n.Data == "img" },
-		func(n *html.Node) bool { return n.Data == "span" },
-		func(n *html.Node) bool { return n.Data == "strong" },
-		func(n *html.Node) bool { return n.FirstChild != nil && n.FirstChild.Data == "img" },
-	)
-}
-
 func makeItemsFromURL(url string) ([]*item, error) {
 	doc, err := parseList(url)
 	if err != nil {
@@ -97,60 +81,52 @@ func makeItemsFromURL(url string) ([]*item, error) {
 	items := make([]*item, 0, len(trNodes))
 
 	for _, tr := range trNodes[1:] {
-		cells := node.Traverse(tr, skip(), nil)
-
-		values, err := cellsToStrings(cells)
+		itm, err := makeItem(tr)
 		if err != nil {
 			return nil, err
 		}
-		newItem, err := makeItem(values)
-		if err != nil {
-			return nil, err
-		}
-
-		items = append(items, newItem)
+		items = append(items, itm)
 	}
 	return items, nil
 }
 
-func makeItem(c []string) (*item, error) {
+func makeItem(n *html.Node) (*item, error) {
+	tdNodes := node.Children(n, func(n *html.Node) bool {
+		return n.Type == html.ElementNode && n.Data == "td"
+	})
 	var err error
 	itm := new(item)
-
-	itm.No, err = strconv.Atoi(c[0])
-	if err != nil {
-		return nil, err
+	if itm.No, err = extractNo(tdNodes[0]); err != nil {
+		return nil, fmt.Errorf("unable to parse No %v", err)
 	}
 
-	itm.Link = c[1]
-
-	u, err := url.Parse(itm.Link)
-	if err != nil {
-		return nil, err
-	}
-	itm.Category = strings.Split(u.Path, "/")[1]
-
-	itm.Name = c[2]
-
-	itm.Usual, err = strconv.ParseFloat(strings.Trim(c[3], "$"), 64)
-	if err != nil {
-		return nil, err
+	if itm.Name, err = extractName(tdNodes[2]); err != nil {
+		return nil, fmt.Errorf("unable to parse Name %v", err)
 	}
 
-	itm.Price, err = strconv.ParseFloat(strings.Trim(c[4], "$"), 64)
-	if err != nil {
-		return nil, err
+	if itm.Category, err = extractCategory(tdNodes[2]); err != nil {
+		return nil, fmt.Errorf("unable to parse Category %v", err)
 	}
 
-	if strings.HasSuffix(c[5], "%") {
-		dotted := strings.Replace(c[5], ",", ".", -1)
-		val, err := strconv.ParseFloat(strings.TrimRight(dotted, "%"), 64)
-		if err != nil {
-			return nil, err
-		}
-
-		itm.Discount = math.Abs(val)
+	if itm.Link, err = extractLink(tdNodes[2]); err != nil {
+		return nil, fmt.Errorf("unable to parse Link %v", err)
 	}
-	itm.Lowest, _ = strconv.ParseFloat(strings.TrimLeft(c[6], "$"), 64)
+
+	if itm.Usual, err = extractUsualPrice(tdNodes[3]); err != nil {
+		return nil, fmt.Errorf("unable to parse Usual price %v", err)
+	}
+
+	if itm.Price, err = extractSalePrice(tdNodes[4]); err != nil {
+		return nil, fmt.Errorf("unable to parse Sale price %v", err)
+	}
+
+	if itm.Discount, err = extractDiscountPersent(tdNodes[4]); err != nil {
+		return nil, fmt.Errorf("unable to parse Discount persent %v", err)
+	}
+
+	if itm.Lowest, err = extractLowestPrice(tdNodes[5]); err != nil {
+		return nil, fmt.Errorf("unable to parse Lowest price %v", err)
+	}
+
 	return itm, nil
 }
