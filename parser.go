@@ -60,7 +60,7 @@ func extractLink(n *html.Node) (string, error) {
 
 func extractUsualPrice(td *html.Node) (float64, error) {
 	priceNode := node.Find(td, func(n *html.Node) bool {
-		return n.Parent == td && strings.HasPrefix(n.Data, "$")
+		return strings.HasPrefix(n.Data, "$") && len(n.Data) > 1 // FIXME
 	})
 	if priceNode == nil {
 		return 0, fmt.Errorf("unable to find price node")
@@ -81,7 +81,7 @@ func extractSalePrice(n *html.Node) (float64, error) {
 	for _, node := range textNodes[5:] {
 		priceStr += node.Data
 	}
-	price, err := strconv.ParseFloat(priceStr, 64)
+	price, err := strconv.ParseFloat(strings.Split(priceStr, "\n")[0], 64)
 	if err != nil {
 		return 0, err
 	}
@@ -90,17 +90,22 @@ func extractSalePrice(n *html.Node) (float64, error) {
 
 func extractDiscountPersent(n *html.Node) (float64, error) {
 	textNodes := node.Traverse(n, func(td *html.Node) bool {
-		return td.Type == html.TextNode && strings.TrimSpace(td.Data) != "" && strings.HasSuffix(td.Data, "%")
+		return td.Type == html.TextNode && strings.TrimSpace(td.Data) != "" && !strings.HasSuffix(td.Data, "%")
 	}, nil)
-	if len(textNodes) == 0 {
+	var discountStr string
+	for _, node := range textNodes[5:] {
+		discountStr += node.Data
+	}
+	items := strings.Split(discountStr, "\n")
+	if len(items) == 1 {
 		return 0, nil
 	}
-	discountStr := strings.Trim(strings.TrimSpace(textNodes[0].Data), "%")
+	discountStr = strings.Trim(strings.TrimSpace(items[1]), "–")
 	discount, err := strconv.ParseFloat(discountStr, 64)
 	if err != nil {
 		return 0, err
 	}
-	return math.Abs(discount), nil
+	return discount, nil
 }
 
 func extractLowestPrice(n *html.Node) (float64, error) {

@@ -15,7 +15,7 @@ func printfTable(out io.Writer, lst []*item, opts *AppOpts) {
 	if opts.CompactTable {
 		table.SetHeader([]string{"#", "N", "P, $", "D, %", "L, $"})
 	} else {
-		table.SetHeader([]string{"Nu", "Name", "Price, $", "Discount, %", "Lowest, $", "Category"})
+		table.SetHeader([]string{"Nu", "Name", "Price, $", "Discount, %", "Lowest, $"})
 	}
 
 	table.SetColumnAlignment([]int{
@@ -24,7 +24,6 @@ func printfTable(out io.Writer, lst []*item, opts *AppOpts) {
 		tablewriter.ALIGN_RIGHT,
 		tablewriter.ALIGN_RIGHT,
 		tablewriter.ALIGN_RIGHT,
-		tablewriter.ALIGN_LEFT,
 	})
 
 	var count int
@@ -38,9 +37,6 @@ func printfTable(out io.Writer, lst []*item, opts *AppOpts) {
 			nonZero(v.Discount),
 			nonZero(v.Lowest),
 		)
-		if !opts.CompactTable {
-			row = append(row, v.Category)
-		}
 		table.Append(row)
 		count++
 	}
@@ -48,7 +44,7 @@ func printfTable(out io.Writer, lst []*item, opts *AppOpts) {
 	if opts.CompactTable {
 		table.SetFooter([]string{"", "", "", "", fmt.Sprintf("%d", count)})
 	} else {
-		table.SetFooter([]string{"", "", "", "", "Items", fmt.Sprintf("%d", count)})
+		table.SetFooter([]string{"", "", "", "Items", fmt.Sprintf("%d", count)})
 	}
 
 	table.Render()
