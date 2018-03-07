@@ -53,7 +53,7 @@ func extractCategory(n *html.Node) (string, error) {
 func extractLink(n *html.Node) (string, error) {
 	link, ok := node.Attr(n.FirstChild, "href")
 	if !ok {
-		return "", fmt.Errorf("unable to find link")
+		return "", fmt.Errorf("unable to find link node")
 	}
 	return link, nil
 }
@@ -63,7 +63,7 @@ func extractUsualPrice(td *html.Node) (float64, error) {
 		return n.Parent == td && strings.HasPrefix(n.Data, "$")
 	})
 	if priceNode == nil {
-		return 0, fmt.Errorf("Unable to find price")
+		return 0, fmt.Errorf("unable to find price node")
 	}
 
 	priceValue, err := strconv.ParseFloat(strings.Trim(priceNode.Data, "$"), 64)

@@ -113,7 +113,7 @@ func makeItem(n *html.Node) (*item, error) {
 	}
 
 	if itm.Usual, err = extractUsualPrice(tdNodes[3]); err != nil {
-		return nil, fmt.Errorf("unable to parse Usual price %v", err)
+		return nil, fmt.Errorf("unable to parse Usual price: %v", err)
 	}
 
 	if itm.Price, err = extractSalePrice(tdNodes[4]); err != nil {
