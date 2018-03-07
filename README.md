@@ -1,4 +1,4 @@
-> # Source site `https://couponsfromchina.com` is down. That is why parser is not able to fetch requred information.
+> # Source site `https://couponsfromchina.com` might be down. That is why parser is not able to fetch requred information.
 
 # lsgbc - List GearBest Coupons
 [![Build Status](https://travis-ci.org/krasoffski/lsgbc.svg?branch=master)](https://travis-ci.org/krasoffski/lsgbc)
