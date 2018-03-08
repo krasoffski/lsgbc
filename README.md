@@ -34,30 +34,21 @@ And change working directory to cloned repository: `cd lsgbc`
 #### Using `make all` target
 
 Installation with `make all` target performs following steps (requires `make`):
- - Download and install [`dep`](https://github.com/golang/dep) package manager.
- - Download dependencies with `dep` command to `vendor` directory.
- - Create binaries for windows, linux and darvin in the `dist` directory.
+ - Removes `bin` directory in the root of repository.
+ - Creates binary with name `lsgbc` by default for host platform with in `bin` directory.
 
 #### Without `make` utility
 
 If you get stuck with `make` command, e.g. on `windows` platform, you can
 perform all steps manually:
 
- - Install `dep` package manager (see note about system path) if it not present.
-    ```
-    $ go get -u github.com/golang/dep/cmd/dep
-    ```
- - Download required dependencies with `dep` command.
-    ```
-    $ dep ensure
-    ```
- - Build executable file for your platform.
+ - Build executable file for your platform from root directory of repository.
     ```
     $ go build
     ```
  - Check created binary.
     ```
-    $ ./dist/lsgbc-linux-amd64 -h
+    $ ./lsgbc -h
     Usage of ./dist/lsgbc-linux-amd64:
       -B, --best=false: show only best deals
       -C, --compact=false: use compact table representation
