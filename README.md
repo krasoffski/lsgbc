@@ -60,7 +60,6 @@ perform all steps manually:
     $ ./dist/lsgbc-linux-amd64 -h
     Usage of ./dist/lsgbc-linux-amd64:
       -B, --best=false: show only best deals
-      -c, --categories="*": comma separated list of categories (case sensitive), e.g. 'aa,b*,cc'
       -C, --compact=false: use compact table representation
       -F, --flash-sale=false: show only flash sale deals
       -l, --list="flashlight": used coupons list, one from: 3d,...,xiaomi
@@ -74,9 +73,8 @@ perform all steps manually:
 ## Usage
 
 For example, you would like to know current price with coupon for `Jetbeam` and
-`Eagle Eye` flashlights with price less than `20 ye`. To sort out name/categories
-you can specify begging of names, categories like `-n jet`, this is equivalent
-of `-n "Jet*"`.
+`Eagle Eye` flashlights with price less than `20 ye`. To sort out names you can
+specify begging of name like `-n jet`, this is equivalent of `-n "Jet*"`.
 
 > __Note:__ by default rows are sorted by ascending the `PRICE`.
 
@@ -85,19 +83,19 @@ This can be achieved with following command:
 ```
 $ ./lsgbc-linux-amd64 -M 20 -n jet,eagle
 
-  NO  |                NAME                 | PRICE, $ | DISCOUNT, % | LOWEST, $ |    CATEGORY
-+-----+-------------------------------------+----------+-------------+-----------+-----------------+
-  164 | Jetbeam JET-u Flashlight            |     11.0 |           - |       7.0 | led-flashlights
-  111 | Eagle Eye X6 HOST Flashlight        |     13.0 |        13.4 |      11.0 | led-flashlights
-  105 | Eagle Eye X2R 6000-6500K Flashlight |     14.0 |        22.5 |         - | led-flashlights
-  163 | Jetbeam JET-I MK Flashlight         |     14.0 |           - |      10.0 | led-flashlights
-  103 | Eagle Eye X2R 1A Flashlight         |     15.9 |        12.0 |      15.0 | led-flashlights
-  104 | Eagle Eye X2R 3C Flashlight         |     16.3 |        12.0 |      13.7 | led-flashlights
-  106 | Eagle Eye X2R NW Flashlight         |     16.3 |        12.0 |      12.5 | led-flashlights
-  107 | Eagle Eye X5R 3A Flashlight         |     20.0 |        34.8 |      20.0 | led-flashlights
-+-----+-------------------------------------+----------+-------------+-----------+-----------------+
-                                                                         ITEMS   |        8
-                                                                     +-----------+-----------------+
+  NU  |                  NAME                  | PRICE, $ | DISCOUNT, % | LOWEST, $  
++-----+----------------------------------------+----------+-------------+-----------+
+  155 | Jetbeam JET-u Flashlight               |     10.9 |           - |       7.0  
+  108 | Eagle Eye X6 HOST Flashlight           |     14.1 |        10.0 |      11.0  
+  156 | JETBeam JET-UV Flashlight              |     14.9 |           - |      11.6  
+  152 | Jetbeam JET-I MK Flashlight            |     15.0 |           - |      10.0  
+  150 | JETBeam i4 PRO Battery Charger EU Plug |     15.9 |        10.0 |      11.7  
+  102 | Eagle Eye X2R 6000-6500K Flashlight    |     16.5 |        10.0 |      14.0  
+  103 | Eagle Eye X2R NW Flashlight            |     16.9 |        10.0 |      12.5  
++-----+----------------------------------------+----------+-------------+-----------+
+                                                               ITEMS    |     7      
+                                                          +-------------+-----------+
+
 ```
 
 There are following fields:
@@ -107,29 +105,27 @@ There are following fields:
  - `PRICE`: product price with applied coupon.
  - `DISCOUNT`: discount in percents comparing with regular price without coupon.
  - `LOWEST`: lowest price for this product during monitoring.
- - `CATEGORY`: product category from URL path.
 
 ### Compact representation
 
-When you get familiar with column names and categories, you might want to use
-compact mode `-C/--compact` on small terminals.
+When you get familiar with column names, you might want to use compact mode
+`-C/--compact` on small terminals.
 
 ```
 $ ./lsgbc-linux-amd64 -M 20 -n Jet,Eagle --compact
 
-   #  |                  N                  | P, $ | D, % | L, $
-+-----+-------------------------------------+------+------+------+
-  164 | Jetbeam JET-u Flashlight            | 11.0 |    - |  7.0
-  111 | Eagle Eye X6 HOST Flashlight        | 13.0 | 13.4 | 11.0
-  105 | Eagle Eye X2R 6000-6500K Flashlight | 14.0 | 22.5 |    -
-  163 | Jetbeam JET-I MK Flashlight         | 14.0 |    - | 10.0
-  103 | Eagle Eye X2R 1A Flashlight         | 15.9 | 12.0 | 15.0
-  104 | Eagle Eye X2R 3C Flashlight         | 16.3 | 12.0 | 13.7
-  106 | Eagle Eye X2R NW Flashlight         | 16.3 | 12.0 | 12.5
-  107 | Eagle Eye X5R 3A Flashlight         | 20.0 | 34.8 | 20.0
-+-----+-------------------------------------+------+------+------+
-                                                             8
-                                                          +------+
+   #  |                   N                    | P, $ | D, % | L, $  
++-----+----------------------------------------+------+------+------+
+  155 | Jetbeam JET-u Flashlight               | 10.9 |    - |  7.0  
+  108 | Eagle Eye X6 HOST Flashlight           | 14.1 | 10.0 | 11.0  
+  156 | JETBeam JET-UV Flashlight              | 14.9 |    - | 11.6  
+  152 | Jetbeam JET-I MK Flashlight            | 15.0 |    - | 10.0  
+  150 | JETBeam i4 PRO Battery Charger EU Plug | 15.9 | 10.0 | 11.7  
+  102 | Eagle Eye X2R 6000-6500K Flashlight    | 16.5 | 10.0 | 14.0  
+  103 | Eagle Eye X2R NW Flashlight            | 16.9 | 10.0 | 12.5  
++-----+----------------------------------------+------+------+------+
+                                                                7    
+                                                             +------+
 ```
 
 ### Flash sale and history
@@ -140,7 +136,7 @@ replaced with `-` char.
 
 Dash `-` character as value has following meanings:
 
-- `DISCOUNT`: you can buy this item without the use of coupon (flash sale).
+- `DISCOUNT`: you can buy this item without using of coupon (flash sale).
 - `LOWEST`: there is no information about the lowest price for this item.
 
 ### The best deal
@@ -151,20 +147,17 @@ shows only items with current `PRICE` equal or less than `LOWEST*1.1`.
 For example:
 
 ```
-$ ./lsgbc-linux-amd64 --max-price=15 --categories=led --best
+$ ./lsgbc-linux-amd64 --max-price=15 --names=convoy --best
 
-  NU  |                  NAME                   | PRICE, $ | DISCOUNT, % | LOWEST, $ |    CATEGORY
-+-----+-----------------------------------------+----------+-------------+-----------+-----------------+
-  384 | Zanflare F6S Flashlight                 |      6.0 |        70.0 |       6.0 | led-flashlights
-  212 | Lumintop IYP365 CW Flashlight           |     10.0 |        20.7 |      10.0 | led-flashlights
-  374 | YWXLight 5000 lm Headlamp               |     10.0 |        23.1 |      10.0 | led-flashlights
-  216 | Lumintop Tool Nichia 219BT Flashlight   |     10.0 |        47.4 |       9.1 | led-flashlights
-  213 | Lumintop IYP365 NW Flashlight           |     12.0 |           - |      12.0 | led-flashlights
-   79 | Convoy S2+ 365nm Nichia UV Flashlight   |     13.0 |        35.0 |      12.0 | led-flashlights
-   74 | Convoy S2 V2-1A Flashlight              |     13.0 |           - |      12.6 | led-flashlights
-+-----+-----------------------------------------+----------+-------------+-----------+-----------------+
-                                                                             ITEMS   |        7
-                                                                         +-----------+-----------------+
+  NU |              NAME               | PRICE, $ | DISCOUNT, % | LOWEST, $  
++----+---------------------------------+----------+-------------+-----------+
+  70 | Convoy S2+ CW Flashlight [GW4]  |     12.0 |        11.8 |      11.0  
+  62 | Convoy S2 V2-1A Flashlight      |     12.3 |           - |      12.3  
+  60 | Convoy S2 U6-3A Grey Flashlight |     12.7 |           - |      12.0  
+  61 | Convoy S2 U6-4B Flashlight      |     12.8 |           - |      12.6  
++----+---------------------------------+----------+-------------+-----------+
+                                                       ITEMS    |     4      
+                                                  +-------------+-----------+
 ```
 This table contains only deals for:
  - Maximum `PRICE` is `$15`.
