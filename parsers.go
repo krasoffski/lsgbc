@@ -113,12 +113,16 @@ func extractDiscountPersent(n *html.Node) (float64, error) {
 
 func extractLowestPrice(n *html.Node) (float64, error) {
 	textNodes := node.Traverse(n, func(td *html.Node) bool {
-		return td.Parent == n && td.Type == html.TextNode && strings.TrimSpace(td.Data) != "" && strings.HasPrefix(td.Data, "$")
+		return (td.Parent.Data == "span" && td.Parent.NextSibling == nil &&
+			td.Type == html.TextNode && strings.TrimSpace(td.Data) != "")
 	}, nil)
 	if len(textNodes) == 0 {
 		return 0, nil
 	}
-	lowestStr := strings.Trim(strings.TrimSpace(textNodes[0].Data), "$")
-	lowest, _ := strconv.ParseFloat(lowestStr, 64)
+	lowestStr := strings.TrimSpace(textNodes[0].Data)
+	lowest, err := strconv.ParseFloat(lowestStr, 64)
+	if err != nil {
+		return 0, err
+	}
 	return math.Abs(lowest), nil
 }
