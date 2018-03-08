@@ -10,14 +10,11 @@
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
-# Ignoring vendor directory due to dep for now
-vendor
-
 # Build binaries
-dist
+bin/
 
 # Debug binaries
-debug
+debug*
 
 # Editor directories
 .vscode

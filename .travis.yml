@@ -6,7 +6,8 @@ go:
   - tip
 
 script:
-  - make all
+  - make install
+  - make test
   - make clean
 
 sudo: false
