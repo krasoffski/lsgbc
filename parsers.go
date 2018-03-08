@@ -78,10 +78,13 @@ func extractSalePrice(n *html.Node) (float64, error) {
 		return td.Type == html.TextNode && strings.TrimSpace(td.Data) != "" && !strings.HasSuffix(td.Data, "%")
 	}, nil)
 	var priceStr string
-	for _, node := range textNodes[5:] {
+	for _, node := range textNodes {
 		priceStr += node.Data
 	}
-	price, err := strconv.ParseFloat(strings.Split(priceStr, "\n")[0], 64)
+	priceStr = strings.Split(priceStr, "\n")[0]
+	priceStr = strings.Trim(strings.TrimSpace(priceStr), "$")
+
+	price, err := strconv.ParseFloat(priceStr, 64)
 	if err != nil {
 		return 0, err
 	}
@@ -93,14 +96,14 @@ func extractDiscountPersent(n *html.Node) (float64, error) {
 		return td.Type == html.TextNode && strings.TrimSpace(td.Data) != "" && !strings.HasSuffix(td.Data, "%")
 	}, nil)
 	var discountStr string
-	for _, node := range textNodes[5:] {
+	for _, node := range textNodes {
 		discountStr += node.Data
 	}
 	items := strings.Split(discountStr, "\n")
 	if len(items) == 1 {
 		return 0, nil
 	}
-	discountStr = strings.Trim(strings.TrimSpace(items[1]), "–")
+	discountStr = strings.Trim(strings.TrimSpace(items[1]), "–%$")
 	discount, err := strconv.ParseFloat(discountStr, 64)
 	if err != nil {
 		return 0, err
