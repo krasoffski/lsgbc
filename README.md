@@ -3,6 +3,7 @@
 # lsgbc - List GearBest Coupons
 [![Build Status](https://travis-ci.org/krasoffski/lsgbc.svg?branch=master)](https://travis-ci.org/krasoffski/lsgbc)
 [![Code Climate](https://codeclimate.com/github/krasoffski/lsgbc/badges/gpa.svg)](https://codeclimate.com/github/krasoffski/lsgbc)
+[![Say Thanks!](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/krasoffski)
 
 ## Objectivity
 In short words, `lsgbs` is a command line interface for
