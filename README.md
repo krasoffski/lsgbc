@@ -1,4 +1,4 @@
-> # Source site `https://couponsfromchina.com` might be down. That is why parser is not able to fetch requred information.
+> # Source site `https://couponsfromchina.com` might be down. That is why parser is not able to fetch required information.
 
 # lsgbc - List GearBest Coupons
 [![Build Status](https://travis-ci.org/krasoffski/lsgbc.svg?branch=master)](https://travis-ci.org/krasoffski/lsgbc)
@@ -13,7 +13,8 @@ different types of items for the best deal look up.
 ## Installation
 
 There are compiled binaries for `amd64` architecture for linux, windows and
-darvin platforms. Please, find these files in the release menu of the project.
+darwin platforms with name like `lsgbc-linux-amd64`. Please, find these files in
+the release menu of the project.
 
 For creating binaries you need `Git` and `Golang` compiler with version equal
 or bigger than `1.8` installed. Please, make sure you have properly configured
@@ -27,7 +28,6 @@ Before all, please clone this repository with command:
 
 ```bash
 $ git clone https://github.com/krasoffski/lsgbc
-# git clone git@github.com:krasoffski/lsgbc.git
 ```
 
 And change working directory to cloned repository: `cd lsgbc`
@@ -35,8 +35,9 @@ And change working directory to cloned repository: `cd lsgbc`
 #### Using `make all` target
 
 Installation with `make all` target performs following steps (requires `make`):
- - Removes `bin` directory in the root of repository.
- - Creates binary with name `lsgbc` by default for host platform with in `bin` directory.
+ - Removes `bin` directory in the root of repository if any.
+ - Creates binary with name `lsgbc` by default for host platform with in `bin`
+   directory.
 
 #### Without `make` utility
 
@@ -50,14 +51,14 @@ perform all steps manually:
  - Check created binary.
     ```
     $ ./lsgbc -h
-    Usage of ./dist/lsgbc-linux-amd64:
+    Usage of ./lsgbc:
       -B, --best=false: show only best deals
       -C, --compact=false: use compact table representation
       -F, --flash-sale=false: show only flash sale deals
       -l, --list="flashlight": used coupons list, one from: 3d,...,xiaomi
       -M, --max-price=1000: maximum discount price
       -m, --min-price=0: minimal discount price
-      -n, --names="*": comma separated list of names (case sensitive), e.g. 'xx,y*,zz'
+      -n, --names="*": comma separated list of names (case insensitive), e.g. 'xx,y*,zz'
       -S, --sort-by="price": sort table by column, 'price' or 'discount'
       -V, --version=false: show version and exit
     ```
@@ -66,14 +67,14 @@ perform all steps manually:
 
 For example, you would like to know current price with coupon for `Jetbeam` and
 `Eagle Eye` flashlights with price less than `20 ye`. To sort out names you can
-specify begging of name like `-n jet`, this is equivalent of `-n "Jet*"`.
+specify beginning of name like `-n jet`, this is equivalent of `-n "Jet*"`.
 
 > __Note:__ by default rows are sorted by ascending the `PRICE`.
 
 This can be achieved with following command:
 
 ```
-$ ./lsgbc-linux-amd64 -M 20 -n jet,eagle
+$ ./lsgbc -M 20 -n jet,eagle
 
   NU  |                  NAME                  | PRICE, $ | DISCOUNT, % | LOWEST, $  
 +-----+----------------------------------------+----------+-------------+-----------+
@@ -104,7 +105,7 @@ When you get familiar with column names, you might want to use compact mode
 `-C/--compact` on small terminals.
 
 ```
-$ ./lsgbc-linux-amd64 -M 20 -n Jet,Eagle --compact
+$ ./lsgbc -M 20 -n Jet,Eagle --compact
 
    #  |                   N                    | P, $ | D, % | L, $  
 +-----+----------------------------------------+------+------+------+
@@ -139,7 +140,7 @@ shows only items with current `PRICE` equal or less than `LOWEST*1.1`.
 For example:
 
 ```
-$ ./lsgbc-linux-amd64 --max-price=15 --names=convoy --best
+$ ./lsgbc --max-price=15 --names=convoy --best
 
   NU |              NAME               | PRICE, $ | DISCOUNT, % | LOWEST, $  
 +----+---------------------------------+----------+-------------+-----------+
@@ -167,7 +168,7 @@ You can sort items by `PRICE` or by `DISCOUNT`. This can be done using option
 of `DISCOUNT` percents.
 
 ```
-$ ./dist/lsgbc-linux-amd64 -C -M 30 -c led -n Lumintop -S d
+$ ./lsgbc -C -M 30 -c led -n Lumintop -S d
 
    #  |                       N                        | P, $ | D, % | L, $
 +-----+------------------------------------------------+------+------+------+
