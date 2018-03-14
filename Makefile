@@ -4,7 +4,7 @@ GOARCH    := amd64
 OUTDIR    := bin
 WINDOWS   := windows
 PLATFORMS := linux darwin windows
-ARGUMENTS := --compact --best --flash-sale
+ARGUMENTS := --compact --best
 COMMIT    ?= $(shell git rev-parse --short HEAD)
 TAG       ?= $(shell git describe --tags --dirty 2>/dev/null)
 VERSION   := $(if $(TAG),$(TAG),git+$(COMMIT))
@@ -21,7 +21,7 @@ install:
 	go build ${LDFLAGS} -o ${OUTDIR}/${BINARY}
 
 .PHONY: release
-release: clean $(PLATFORMS) 
+release: clean $(PLATFORMS)
 
 .PHONY: $(PLATFORMS)
 windows: SUFFIX=.exe

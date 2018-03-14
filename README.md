@@ -16,13 +16,21 @@ There are compiled binaries for `amd64` architecture for linux, windows and
 darwin platforms with name like `lsgbc-linux-amd64`. Please, find these files in
 the release menu of the project.
 
+### Manual installation
+
 For creating binaries you need `Git` and `Golang` compiler with version equal
 or bigger than `1.8` installed. Please, make sure you have properly configured
 `GOPATH` and system path variables:
  - Add `$GOROOT/bin` to system path.
  - Add `$GOPATH/bin` to system path.
 
-### Manual installation
+#### Using `go get`
+
+```bash
+$ go get github.com/krasoffski/lsgbc
+```
+
+#### From sources
 
 Before all, please clone this repository with command:
 
@@ -30,7 +38,15 @@ Before all, please clone this repository with command:
 $ git clone https://github.com/krasoffski/lsgbc
 ```
 
+Or download archive with source code.
+
+```bash
+$ wget https://github.com/krasoffski/lsgbc/archive/master.zip
+$ unzip master.zip
+```
+
 And change working directory to cloned repository: `cd lsgbc`
+
 
 #### Using `make all` target
 
@@ -38,6 +54,28 @@ Installation with `make all` target performs following steps (requires `make`):
  - Removes `bin` directory in the root of repository if any.
  - Creates binary with name `lsgbc` by default for host platform with in `bin`
    directory.
+
+#### Using `make release` target
+
+Installation with `make release` target performs following steps (requires
+`make`, `zip`, `md5sum`):
+ - Removes `bin` directory in the root of repository if any.
+ - Creates binaries with names like `lsgbc-windows-amd64` for each platform
+   (windows, linux, darwin).
+ - Pack each binary to zip archive with names like
+   `lsgbc-v0.0.6-windows-amd64.zip`
+ - Create file `md5sum.txt` for archived zip files.
+
+```bash
+$ ls -S -1 ./bin/
+lsgbc-darwin-amd64
+lsgbc-linux-amd64
+lsgbc-windows-amd64.exe
+lsgbc-v0.0.6-darwin-amd64.zip
+lsgbc-v0.0.6-linux-amd64.zip
+lsgbc-v0.0.6-windows-amd64.zip
+md5sum.txt
+```
 
 #### Without `make` utility
 
@@ -76,17 +114,17 @@ This can be achieved with following command:
 ```
 $ ./lsgbc -M 20 -n jet,eagle
 
-  NU  |                  NAME                  | PRICE, $ | DISCOUNT, % | LOWEST, $  
+  NU  |                  NAME                  | PRICE, $ | DISCOUNT, % | LOWEST, $
 +-----+----------------------------------------+----------+-------------+-----------+
-  155 | Jetbeam JET-u Flashlight               |     10.9 |           - |       7.0  
-  108 | Eagle Eye X6 HOST Flashlight           |     14.1 |        10.0 |      11.0  
-  156 | JETBeam JET-UV Flashlight              |     14.9 |           - |      11.6  
-  152 | Jetbeam JET-I MK Flashlight            |     15.0 |           - |      10.0  
-  150 | JETBeam i4 PRO Battery Charger EU Plug |     15.9 |        10.0 |      11.7  
-  102 | Eagle Eye X2R 6000-6500K Flashlight    |     16.5 |        10.0 |      14.0  
-  103 | Eagle Eye X2R NW Flashlight            |     16.9 |        10.0 |      12.5  
+  155 | Jetbeam JET-u Flashlight               |     10.9 |           - |       7.0
+  108 | Eagle Eye X6 HOST Flashlight           |     14.1 |        10.0 |      11.0
+  156 | JETBeam JET-UV Flashlight              |     14.9 |           - |      11.6
+  152 | Jetbeam JET-I MK Flashlight            |     15.0 |           - |      10.0
+  150 | JETBeam i4 PRO Battery Charger EU Plug |     15.9 |        10.0 |      11.7
+  102 | Eagle Eye X2R 6000-6500K Flashlight    |     16.5 |        10.0 |      14.0
+  103 | Eagle Eye X2R NW Flashlight            |     16.9 |        10.0 |      12.5
 +-----+----------------------------------------+----------+-------------+-----------+
-                                                               ITEMS    |     7      
+                                                               ITEMS    |     7
                                                           +-------------+-----------+
 
 ```
@@ -107,17 +145,17 @@ When you get familiar with column names, you might want to use compact mode
 ```
 $ ./lsgbc -M 20 -n Jet,Eagle --compact
 
-   #  |                   N                    | P, $ | D, % | L, $  
+   #  |                   N                    | P, $ | D, % | L, $
 +-----+----------------------------------------+------+------+------+
-  155 | Jetbeam JET-u Flashlight               | 10.9 |    - |  7.0  
-  108 | Eagle Eye X6 HOST Flashlight           | 14.1 | 10.0 | 11.0  
-  156 | JETBeam JET-UV Flashlight              | 14.9 |    - | 11.6  
-  152 | Jetbeam JET-I MK Flashlight            | 15.0 |    - | 10.0  
-  150 | JETBeam i4 PRO Battery Charger EU Plug | 15.9 | 10.0 | 11.7  
-  102 | Eagle Eye X2R 6000-6500K Flashlight    | 16.5 | 10.0 | 14.0  
-  103 | Eagle Eye X2R NW Flashlight            | 16.9 | 10.0 | 12.5  
+  155 | Jetbeam JET-u Flashlight               | 10.9 |    - |  7.0
+  108 | Eagle Eye X6 HOST Flashlight           | 14.1 | 10.0 | 11.0
+  156 | JETBeam JET-UV Flashlight              | 14.9 |    - | 11.6
+  152 | Jetbeam JET-I MK Flashlight            | 15.0 |    - | 10.0
+  150 | JETBeam i4 PRO Battery Charger EU Plug | 15.9 | 10.0 | 11.7
+  102 | Eagle Eye X2R 6000-6500K Flashlight    | 16.5 | 10.0 | 14.0
+  103 | Eagle Eye X2R NW Flashlight            | 16.9 | 10.0 | 12.5
 +-----+----------------------------------------+------+------+------+
-                                                                7    
+                                                                7
                                                              +------+
 ```
 
@@ -142,14 +180,14 @@ For example:
 ```
 $ ./lsgbc --max-price=15 --names=convoy --best
 
-  NU |              NAME               | PRICE, $ | DISCOUNT, % | LOWEST, $  
+  NU |              NAME               | PRICE, $ | DISCOUNT, % | LOWEST, $
 +----+---------------------------------+----------+-------------+-----------+
-  70 | Convoy S2+ CW Flashlight [GW4]  |     12.0 |        11.8 |      11.0  
-  62 | Convoy S2 V2-1A Flashlight      |     12.3 |           - |      12.3  
-  60 | Convoy S2 U6-3A Grey Flashlight |     12.7 |           - |      12.0  
-  61 | Convoy S2 U6-4B Flashlight      |     12.8 |           - |      12.6  
+  70 | Convoy S2+ CW Flashlight [GW4]  |     12.0 |        11.8 |      11.0
+  62 | Convoy S2 V2-1A Flashlight      |     12.3 |           - |      12.3
+  60 | Convoy S2 U6-3A Grey Flashlight |     12.7 |           - |      12.0
+  61 | Convoy S2 U6-4B Flashlight      |     12.8 |           - |      12.6
 +----+---------------------------------+----------+-------------+-----------+
-                                                       ITEMS    |     4      
+                                                       ITEMS    |     4
                                                   +-------------+-----------+
 ```
 This table contains only deals for:
