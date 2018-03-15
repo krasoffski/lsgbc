@@ -36,7 +36,14 @@ func extractNo(n *html.Node) (int, error) {
 }
 
 func extractName(n *html.Node) (string, error) {
-	return n.FirstChild.FirstChild.Data, nil
+	textNodes := node.Traverse(n, func(td *html.Node) bool {
+		return td.Type == html.TextNode && strings.TrimSpace(td.Data) != "" && td.Data != "span"
+	}, nil)
+	parts := make([]string, 0, len(textNodes))
+	for _, node := range textNodes {
+		parts = append(parts, strings.TrimSpace(node.Data))
+	}
+	return strings.Join(parts, " "), nil
 }
 
 func extractCategory(n *html.Node) (string, error) {
