@@ -1,3 +1,4 @@
+// TODO: use regexp here insted this hacks.
 package main
 
 import (
@@ -5,12 +6,19 @@ import (
 	"math"
 	"net/http"
 	"net/url"
+	"regexp"
 	"strconv"
 	"strings"
 
 	"github.com/krasoffski/gomill/node"
 
 	"golang.org/x/net/html"
+)
+
+const digit = `([0-9]+[.]?[0-9]*)`
+
+var (
+	discountPersent = regexp.MustCompile(digit)
 )
 
 func parseList(url string) (*html.Node, error) {
@@ -88,7 +96,7 @@ func extractSalePrice(n *html.Node) (float64, error) {
 	for _, node := range textNodes {
 		priceStr += node.Data
 	}
-	priceStr = strings.Split(priceStr, "\n")[0]
+	priceStr = strings.Split(priceStr, "–")[0]
 	priceStr = strings.Trim(strings.TrimSpace(priceStr), "$")
 
 	price, err := strconv.ParseFloat(priceStr, 64)
@@ -104,14 +112,14 @@ func extractDiscountPersent(n *html.Node) (float64, error) {
 	}, nil)
 	var discountStr string
 	for _, node := range textNodes {
-		discountStr += node.Data
+		discountStr += strings.TrimSpace(node.Data)
 	}
-	items := strings.Split(discountStr, "\n")
-	if len(items) == 1 {
+
+	res := discountPersent.FindAllString(discountStr, -1)
+	if len(res) <= 1 {
 		return 0, nil
 	}
-	discountStr = strings.Trim(strings.TrimSpace(items[1]), "–%$")
-	discount, err := strconv.ParseFloat(discountStr, 64)
+	discount, err := strconv.ParseFloat(res[1], 64)
 	if err != nil {
 		return 0, err
 	}

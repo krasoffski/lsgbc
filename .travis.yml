@@ -7,7 +7,7 @@ go:
 
 script:
   - make install
-  - make test
+  - make run
   - make clean
 
 sudo: false

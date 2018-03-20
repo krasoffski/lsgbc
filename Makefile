@@ -13,9 +13,6 @@ LDFLAGS   := -ldflags "-s -w -X main.Version=$(VERSION)"
 .PHONY: all
 all: clean install
 
-.PHONY: test
-test: run
-
 .PHONY: install
 install:
 	go build ${LDFLAGS} -o ${OUTDIR}/${BINARY}
