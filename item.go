@@ -97,7 +97,7 @@ func makeItem(n *html.Node) (*item, error) {
 	var err error
 	itm := new(item)
 	if itm.No, err = extractNo(tdNodes[0]); err != nil {
-		return nil, fmt.Errorf("unable to parse No %v", err)
+		return nil, fmt.Errorf("unable to parse No: %v", err)
 	}
 
 	if itm.Name, err = extractName(tdNodes[2]); err != nil {
@@ -105,11 +105,11 @@ func makeItem(n *html.Node) (*item, error) {
 	}
 
 	if itm.Category, err = extractCategory(tdNodes[2]); err != nil {
-		return nil, fmt.Errorf("unable to parse Category %v", err)
+		return nil, fmt.Errorf("unable to parse Category: %v", err)
 	}
 
 	if itm.Link, err = extractLink(tdNodes[2]); err != nil {
-		return nil, fmt.Errorf("unable to parse Link %v", err)
+		return nil, fmt.Errorf("unable to parse Link: %v", err)
 	}
 
 	if itm.Usual, err = extractUsualPrice(tdNodes[3]); err != nil {
@@ -117,15 +117,15 @@ func makeItem(n *html.Node) (*item, error) {
 	}
 
 	if itm.Price, err = extractSalePrice(tdNodes[4]); err != nil {
-		return nil, fmt.Errorf("unable to parse Sale price %v", err)
+		return nil, fmt.Errorf("unable to parse Sale price: %v", err)
 	}
 
 	if itm.Discount, err = extractDiscountPersent(tdNodes[4]); err != nil {
-		return nil, fmt.Errorf("unable to parse Discount persent %v", err)
+		return nil, fmt.Errorf("unable to parse Discount persent: %v", err)
 	}
 
 	if itm.Lowest, err = extractLowestPrice(tdNodes[5]); err != nil {
-		return nil, fmt.Errorf("unable to parse Lowest price %v", err)
+		return nil, fmt.Errorf("unable to parse Lowest price: %v", err)
 	}
 
 	return itm, nil
