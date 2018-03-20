@@ -5,7 +5,7 @@
   branch = "master"
   name = "github.com/krasoffski/gomill"
   packages = ["node"]
-  revision = "b043a545931429c0f11144b7f69a830bbb4a2ee9"
+  revision = "eac5a052df8375e5950dccc0cc17e44ff41e4ee7"
 
 [[projects]]
   name = "github.com/mattn/go-runewidth"
@@ -38,7 +38,7 @@
     "html",
     "html/atom"
   ]
-  revision = "f5dfe339be1d06f81b22525fe34671ee7d2c8904"
+  revision = "6078986fec03a1dcc236c34816c71b0e05018fda"
 
 [solve-meta]
   analyzer-name = "dep"

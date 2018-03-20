@@ -110,11 +110,11 @@ func extractDiscountPersent(n *html.Node) (float64, error) {
 	textNodes := node.Traverse(n, func(td *html.Node) bool {
 		return td.Type == html.TextNode && strings.TrimSpace(td.Data) != "" && !strings.HasSuffix(td.Data, "%")
 	}, nil)
-	var discountStr string
-	for _, node := range textNodes {
-		discountStr += strings.TrimSpace(node.Data)
-	}
-
+	// var discountStr string
+	// for _, node := range textNodes {
+	// 	discountStr += strings.TrimSpace(node.Data)
+	// }
+	discountStr := node.JoinData(textNodes...)
 	res := discountPersent.FindAllString(discountStr, -1)
 	if len(res) <= 1 {
 		return 0, nil
