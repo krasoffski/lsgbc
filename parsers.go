@@ -108,7 +108,7 @@ func extractSalePrice(n *html.Node) (float64, error) {
 
 func extractDiscountPersent(n *html.Node) (float64, error) {
 	textNodes := node.Traverse(n, func(td *html.Node) bool {
-		return td.Type == html.TextNode && strings.TrimSpace(td.Data) != "" && !strings.HasSuffix(td.Data, "%")
+		return td.Type == html.TextNode && strings.TrimSpace(td.Data) != ""
 	}, nil)
 	// var discountStr string
 	// for _, node := range textNodes {
