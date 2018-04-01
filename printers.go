@@ -7,7 +7,7 @@ import (
 	"github.com/olekukonko/tablewriter"
 )
 
-func printfTable(out io.Writer, lst []*item, opts *AppOpts) {
+func printfTable(out io.Writer, lst []*item, opts *Options) {
 	table := tablewriter.NewWriter(out)
 	table.SetAutoWrapText(false)
 	table.SetBorder(false)

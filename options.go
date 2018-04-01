@@ -1,7 +1,7 @@
 package main
 
-// AppOpts represents required CLI options.
-type AppOpts struct {
+// Options represents required CLI options.
+type Options struct {
 	CompactTable bool
 	FlashSale    bool
 	List         string

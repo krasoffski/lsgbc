@@ -1,6 +1,6 @@
 package main
 
-func sortOut(items []*item, opts *AppOpts) []*item {
+func sortOut(items []*item, opts *Options) []*item {
 
 	filtered := make([]*item, 0)
 

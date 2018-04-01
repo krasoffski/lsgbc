@@ -14,7 +14,7 @@ import (
 var Version = "0.0.0"
 
 func main() {
-	var opts = AppOpts{}
+	var opts = Options{}
 	// This code smells.
 	allowedList := make([]string, 0, len(Links))
 	for k := range Links {
