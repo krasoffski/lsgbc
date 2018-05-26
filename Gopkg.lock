@@ -23,7 +23,7 @@
   branch = "master"
   name = "github.com/olekukonko/tablewriter"
   packages = ["."]
-  revision = "b8a9be070da40449e501c3c4730a889e42d87a9e"
+  revision = "d4647c9c7a84d847478d890b816b7d8b62b0b279"
 
 [[projects]]
   name = "github.com/ryanuber/go-glob"
@@ -38,7 +38,7 @@
     "html",
     "html/atom"
   ]
-  revision = "6078986fec03a1dcc236c34816c71b0e05018fda"
+  revision = "dfa909b99c79129e1100513e5cd36307665e5723"
 
 [solve-meta]
   analyzer-name = "dep"
