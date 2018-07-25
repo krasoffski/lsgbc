@@ -26,6 +26,7 @@ func main() {
 	pflag.BoolVarP(&opts.CompactTable, "compact", "C", false, "use compact table representation")
 	pflag.BoolVarP(&opts.FlashSale, "flash-sale", "F", false, "show only flash sale deals")
 	pflag.BoolVarP(&opts.ShowBest, "best", "B", false, "show only best deals")
+	pflag.BoolVarP(&opts.Verbose, "verbose", "v", false, "verbose output for debugging")
 	pflag.BoolVarP(&opts.Version, "version", "V", false, "show version and exit")
 	pflag.Float64VarP(&opts.MaxPrice, "max-price", "M", 1000.0, "maximum discount price")
 	pflag.Float64VarP(&opts.MinPrice, "min-price", "m", 0.0, "minimal discount price")
@@ -39,11 +40,15 @@ func main() {
 		os.Exit(0)
 	}
 
+	if opts.Verbose {
+		initLog(os.Stderr)
+	}
+
 	url, ok := Links[opts.List]
 	if !ok {
 		log.Fatalf("invalid choice '%s', allowed one from: %s\n", opts.List, allowed)
 	}
-
+	logger.Debug("Starting application")
 	items, err := makeItemsFromURL(url)
 	if err != nil {
 		log.Fatalln(err)

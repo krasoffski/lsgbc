@@ -11,4 +11,5 @@ type Options struct {
 	ShowBest     bool
 	SortBy       string
 	Version      bool
+	Verbose      bool
 }
